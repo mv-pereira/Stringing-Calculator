@@ -308,6 +308,7 @@
           <div class="projeto-acoes">
             <button type="button" id="btnSalvarProjeto" onclick="salvarProjeto()">Save JSON to device</button>
             <button type="button" id="btnCompartilharProjeto" onclick="compartilharProjeto()">Share project</button>
+            <button type="button" id="btnCompartilharAlternativo" onclick="compartilharProjeto(true)" hidden>Try another share format</button>
             <button type="button" onclick="document.getElementById('arquivoProjeto').click()">Open local project (.json / .txt)</button>
           </div>
           <input type="file" id="arquivoProjeto" accept=".json,.txt,application/json,text/plain" style="display:none">
@@ -2431,31 +2432,69 @@
         informarProjeto(`Download requested: ${nome}. Look in your device's Downloads or Files app.`);
       }
 
-      async function compartilharProjeto() {
+      async function compartilharProjeto(usarAlternativo = false) {
+        // Each attempt starts from a user tap: Android browsers may reject a
+        // second navigator.share() call after the first Promise has settled.
+        const botaoAlternativo = document.getElementById("btnCompartilharAlternativo");
+        botaoAlternativo.hidden = true;
         if (!navigator.share || typeof File === "undefined") {
-          informarProjeto("Sharing is unavailable in this browser. Download the JSON and attach it in WhatsApp or email.", true);
+          informarProjeto("Sharing is unavailable in this browser. Save the JSON and attach it in WhatsApp or email.", true);
           return;
         }
+
         const nome = obterNomeArquivoProjeto();
         const conteudo = JSON.stringify(gerarDadosProjeto(), null, 2);
         const titulo = document.getElementById("nomeProjeto")?.value.trim() || "Stringing project";
         const json = new File([conteudo], nome, {type: "application/json"});
-        // Some mobile share menus accept .txt but not .json attachments.
-        const texto = new File([conteudo], nome + ".txt", {type: "text/plain"});
-        const podeCompartilhar = arquivo => !navigator.canShare || navigator.canShare({files: [arquivo]});
-        let arquivo = podeCompartilhar(json) ? json : (podeCompartilhar(texto) ? texto : null);
-        if (!arquivo) {
-          informarProjeto("This device cannot share project files. Download the JSON and attach it manually.", true);
+        // Android share targets are often more compatible with .txt than .json.
+        // Its contents are still genuine JSON and can be opened by this app.
+        const texto = new File([conteudo], nome.replace(/\.json$/i, ".txt"), {type: "text/plain"});
+        const android = /Android/i.test(navigator.userAgent || "");
+        const preferido = android ? texto : json;
+        const alternativo = android ? json : texto;
+        const podeCompartilhar = arquivo => {
+          try {
+            return !navigator.canShare || navigator.canShare({files: [arquivo]});
+          } catch (erro) {
+            return false;
+          }
+        };
+
+        // Switch formats before sharing if canShare() rejects the preferred one.
+        let arquivo = usarAlternativo ? alternativo : preferido;
+        if (!podeCompartilhar(arquivo) && !usarAlternativo && podeCompartilhar(alternativo)) {
+          arquivo = alternativo;
+        }
+        if (!podeCompartilhar(arquivo)) {
+          informarProjeto("This device cannot share this file type. Use Save JSON and attach it manually.", true);
           return;
         }
+
         try {
-          await navigator.share({files: [arquivo], title: titulo, text: "Stringing Calculator project"});
-          informarProjeto(arquivo === json ? "Project sent to the share menu as JSON." :
-            "Project sent as a .txt attachment containing JSON; this app can open it too.");
+          // Send just the attachment: mixing a text message with the file can
+          // make certain Android apps favor the message instead of the file.
+          await navigator.share({files: [arquivo], title: titulo});
+          informarProjeto(arquivo === json
+            ? "Project shared as .json."
+            : "Project shared as .txt (containing JSON). It can be reopened here with Open local project.");
         } catch (erro) {
-          if (erro.name !== "AbortError") {
-            console.error(erro);
-            informarProjeto("Could not share this file. Use Save JSON and attach it manually.", true);
+          if (erro?.name === "AbortError") {
+            informarProjeto("Sharing canceled (or no compatible app is available).");
+            return;
+          }
+          console.error("Project sharing failed:", erro);
+          const outro = arquivo === json ? texto : json;
+          const descricaoErro = erro?.name || "unknown error";
+          if (podeCompartilhar(outro)) {
+            // A fresh tap is needed for the next native share invocation.
+            botaoAlternativo.textContent = outro === json ? "Try sharing as JSON (.json)" : "Try sharing as TXT (.txt)";
+            botaoAlternativo.hidden = false;
+            // In this retry, the alternative relative to the device's default
+            // must be selected explicitly, even if the first choice was changed.
+            botaoAlternativo.onclick = () => compartilharProjeto(outro === alternativo);
+            informarProjeto(`Sharing failed (${descricaoErro}). Tap the alternative-format button below, or use Save JSON and attach it manually.`, true);
+          } else {
+            informarProjeto(`Sharing failed (${descricaoErro}). Use Save JSON and attach it manually.`, true);
           }
         }
       }
