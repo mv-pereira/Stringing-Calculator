@@ -124,6 +124,18 @@
       td:nth-child(5) {
         min-width: 130px;
       }
+
+      /* GitHub project browser and portable save/share controls */
+      .projeto-acoes { display: flex; flex-wrap: wrap; gap: 8px; }
+      .projeto-acoes button { flex: 1 1 180px; min-width: 0; }
+      .projeto-online { margin-top: 15px; padding-top: 15px; border-top: 1px solid #e1e5e9; }
+      .projeto-online select { width: 100%; box-sizing: border-box; padding: 10px; font-size: 16px; background: #fff; border: 1px solid #bcc7d2; border-radius: 6px; }
+      .projeto-acoes button, .projeto-online button { border: 1px solid #b5c4d3; border-radius: 6px; background: #f4f8fc; color: #203956; }
+      .projeto-acoes button:hover, .projeto-online button:hover { background: #e6f0fa; }
+      .projeto-acoes button:disabled, .projeto-online button:disabled { cursor: wait; opacity: 0.6; }
+      #statusProjetos { min-height: 18px; margin-top: 8px; font-size: 13px; text-align: left; color: #405168; }
+      #statusProjetos.erro { color: #a12d25; }
+      .nota-compartilhar { font-size: 12px; color: #596878; margin-top: 7px; line-height: 1.45; }
     </style>
   </head>
   <body>
@@ -293,9 +305,21 @@
         <div class="campo-linha">
           <label for="nomeProjeto">Nome do arquivo</label>
           <input type="text" id="nomeProjeto" placeholder="Nicolas Dufour - 1683" value="Nicolas Dufour - 1683" />
-          <button type="button" onclick="salvarProjeto()">Salvar projeto</button>
-          <button type="button" onclick="document.getElementById('arquivoProjeto').click()">Abrir projeto</button>
-          <input type="file" id="arquivoProjeto" accept=".json" style="display:none">
+          <div class="projeto-acoes">
+            <button type="button" id="btnSalvarProjeto" onclick="salvarProjeto()">Save JSON to device</button>
+            <button type="button" id="btnCompartilharProjeto" onclick="compartilharProjeto()">Share project</button>
+            <button type="button" onclick="document.getElementById('arquivoProjeto').click()">Open local project (.json / .txt)</button>
+          </div>
+          <input type="file" id="arquivoProjeto" accept=".json,.txt,application/json,text/plain" style="display:none">
+          <div class="nota-compartilhar">Sharing uses your device's share menu when available (WhatsApp, email, Files, etc.). On unsupported browsers, save the JSON and attach it manually. A shared .txt attachment contains the same JSON and can also be opened here.</div>
+          <div class="projeto-online">
+            <label for="projetosGithub">Projects available on GitHub</label>
+            <select id="projetosGithub" aria-label="GitHub projects">
+              <option value="">Loading projects...</option>
+            </select>
+            <button type="button" id="btnAbrirGithub" onclick="abrirProjetoDoGithub()" disabled style="margin-top:8px">Open selected GitHub project</button>
+          </div>
+          <div id="statusProjetos" role="status" aria-live="polite"></div>
         </div>
       </div>
     </div>
@@ -2242,7 +2266,122 @@
         recalcularTudo();
       }
 
-      function salvarProjeto() {
+      // =========================================================
+      // PROJECTS: GitHub catalogue, local JSON and native sharing
+      // =========================================================
+      const PROJETOS_GITHUB_PADRAO = [
+        "Clavichord - Dominicus Pisaurensis, Venice, 1543.json",
+        "Cristofori 1726.json",
+        "Giovanni Ferrini - No Date.json",
+        "Hass Hamburg 1740 - Clavichord.json",
+        "Specken, Stockholm, 1740's - Clavichord.json",
+        "Taskin 1780.json"
+      ];
+      const REPOSITORIO_GITHUB = "mv-pereira/Stringing-Calculator";
+      const RAMO_GITHUB = "main";
+      const seletorGithub = document.getElementById("projetosGithub");
+      const btnAbrirGithub = document.getElementById("btnAbrirGithub");
+      const statusProjetos = document.getElementById("statusProjetos");
+
+      function informarProjeto(mensagem, erro = false) {
+        statusProjetos.textContent = mensagem;
+        statusProjetos.classList.toggle("erro", erro);
+      }
+
+      function preencherProjetosGithub(nomes) {
+        const anterior = seletorGithub.value;
+        seletorGithub.replaceChildren();
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Select a GitHub project...";
+        seletorGithub.appendChild(placeholder);
+        for (const nome of nomes) {
+          const opcao = document.createElement("option");
+          opcao.value = nome;
+          opcao.textContent = nome.replace(/\.json$/i, "");
+          seletorGithub.appendChild(opcao);
+        }
+        if (nomes.includes(anterior)) seletorGithub.value = anterior;
+        btnAbrirGithub.disabled = !seletorGithub.value;
+      }
+
+      async function listarProjetosGithub() {
+        // The embedded list also works if GitHub's public API is rate-limited.
+        preencherProjetosGithub(PROJETOS_GITHUB_PADRAO);
+        try {
+          const url = `https://api.github.com/repos/${REPOSITORIO_GITHUB}/contents?ref=${RAMO_GITHUB}`;
+          const resposta = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
+          if (!resposta.ok) throw new Error("GitHub API " + resposta.status);
+          const arquivos = await resposta.json();
+          if (!Array.isArray(arquivos)) throw new Error("Invalid GitHub list");
+          const nomes = arquivos.filter(item => item.type === "file" && /\.json$/i.test(item.name))
+            .map(item => item.name).sort((a, b) => a.localeCompare(b));
+          if (nomes.length) preencherProjetosGithub(nomes);
+        } catch (erro) {
+          // The six projects seen in the repository remain selectable.
+          console.info("Using built-in GitHub project list:", erro);
+        }
+      }
+      seletorGithub.addEventListener("change", () => {
+        btnAbrirGithub.disabled = !seletorGithub.value;
+      });
+
+      function validarDadosProjeto(projeto) {
+        if (!projeto || Array.isArray(projeto) || typeof projeto !== "object" ||
+            !projeto.notas || Array.isArray(projeto.notas) || typeof projeto.notas !== "object") {
+          throw new Error("This file is not a compatible stringing project (missing notas).");
+        }
+        const notasConhecidas = [...document.querySelectorAll("#tabela tbody tr")]
+          .map(tr => tr.children[0].textContent.trim());
+        if (!notasConhecidas.some(n => Object.hasOwn(projeto.notas, n))) {
+          throw new Error("This project does not contain any recognized notes.");
+        }
+        for (const nome of notasConhecidas) {
+          const entrada = projeto.notas[nome];
+          if (entrada === undefined) continue;
+          if (!entrada || typeof entrada !== "object" || Array.isArray(entrada)) {
+            throw new Error(`Invalid data for note ${nome}.`);
+          }
+        }
+      }
+
+      function carregarDadosProjeto(projeto) {
+        validarDadosProjeto(projeto); // Validate BEFORE changing the worksheet.
+        const porId = id => document.getElementById(id);
+        porId("nomeProjeto").value = projeto.nomeProjeto ?? "";
+        porId("comentariosProjeto").value = projeto.comentariosProjeto ?? "";
+        atualizarTituloProjeto();
+        const fabricante = porId("wireMaker");
+        fabricante.value = [...fabricante.options].some(opcao => opcao.value === projeto.wireMaker)
+          ? projeto.wireMaker : "malcolmRose";
+        porId("pitchA1").value = projeto.pitchA1 ?? "415.3";
+        // Some older GitHub project files do not have a transposition property.
+        porId("transposicaoSemitons").value = projeto.transposicaoSemitons ?? "0";
+        atualizarDescricaoTransposicao();
+        porId("sfLimit").value = projeto.sfLimit ?? "-2";
+        const menorFio = porId("smallestWireF2");
+        menorFio.value = projeto.smallestWireF2 ?? "";
+        menorFio.dataset.indice = projeto.smallestWireF2Indice ?? "0";
+        porId("refDiamC2").value = projeto.refDiamC2 ?? "";
+        document.querySelectorAll("#tabela tbody tr").forEach(tr => {
+          const nota = tr.children[0].textContent.trim();
+          const tdComp = tr.children[1];
+          const inputComp = tdComp.querySelector("input");
+          const diamInput = tr.querySelector(".calcdiam-input");
+          const dadosNota = projeto.notas[nota];
+          // Clear notes missing from a partial JSON file: never mix projects.
+          const valor = dadosNota?.comprimento ?? "";
+          if (inputComp) inputComp.value = String(valor);
+          tdComp.classList.toggle("vazio", valor === "" || valor === "0" || Number(valor) === 0);
+          if (diamInput) diamInput.dataset.ajuste = String(dadosNota?.ajusteGauge ?? "0");
+        });
+        aplicarPitch();
+        calcularMaxWireF2();
+        atualizarFrequenciasTabela();
+        recalcularTudo();
+      }
+
+      function gerarDadosProjeto() {
         const projeto = {
           nomeProjeto: document.getElementById("nomeProjeto")?.value || "",
           comentariosProjeto: document.getElementById("comentariosProjeto")?.value || "",
@@ -2255,109 +2394,134 @@
           refDiamC2: document.getElementById("refDiamC2")?.value || "",
           notas: {}
         };
-        const linhas = document.querySelectorAll("#tabela tbody tr");
-        linhas.forEach(tr => {
+        document.querySelectorAll("#tabela tbody tr").forEach(tr => {
           const nota = tr.children[0].textContent.trim();
           const inputComp = tr.children[1].querySelector("input");
           const diamInput = tr.querySelector(".calcdiam-input");
           projeto.notas[nota] = {
             comprimento: inputComp ? inputComp.value : "",
-            ajusteGauge: diamInput ? (diamInput.dataset.ajuste || "0") : "0"
+            ajusteGauge: diamInput ? diamInput.dataset.ajuste || "0" : "0"
           };
         });
-        const blob = new Blob(
-          [JSON.stringify(projeto, null, 2)], {
-            type: "application/json"
-          });
+        return projeto;
+      }
+
+      function obterNomeArquivoProjeto() {
+        let nome = document.getElementById("nomeProjeto")?.value.trim() || "stringing-project";
+        nome = nome.replace(/[\\/:*?"<>|\x00-\x1F]/g, "-").replace(/[. ]+$/g, "").slice(0, 120);
+        if (!nome) nome = "stringing-project";
+        return /\.json$/i.test(nome) ? nome : nome + ".json";
+      }
+
+      function salvarProjeto() {
+        const conteudo = JSON.stringify(gerarDadosProjeto(), null, 2);
+        const nome = obterNomeArquivoProjeto();
+        const blob = new Blob([conteudo], { type: "application/json;charset=utf-8" });
         const url = URL.createObjectURL(blob);
-        let nomeArquivo = projeto.nomeProjeto.trim();
-        if (!nomeArquivo) nomeArquivo = "cravo-projeto";
-        if (!nomeArquivo.endsWith(".json")) nomeArquivo += ".json";
         const a = document.createElement("a");
         a.href = url;
-        a.download = nomeArquivo;
+        a.download = nome;
+        a.style.display = "none";
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(url);
+        a.remove();
+        // Some mobile browsers need the blob URL to remain valid briefly.
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+        informarProjeto(`Download requested: ${nome}. Look in your device's Downloads or Files app.`);
+      }
+
+      async function compartilharProjeto() {
+        if (!navigator.share || typeof File === "undefined") {
+          informarProjeto("Sharing is unavailable in this browser. Download the JSON and attach it in WhatsApp or email.", true);
+          return;
+        }
+        const nome = obterNomeArquivoProjeto();
+        const conteudo = JSON.stringify(gerarDadosProjeto(), null, 2);
+        const titulo = document.getElementById("nomeProjeto")?.value.trim() || "Stringing project";
+        const json = new File([conteudo], nome, {type: "application/json"});
+        // Some mobile share menus accept .txt but not .json attachments.
+        const texto = new File([conteudo], nome + ".txt", {type: "text/plain"});
+        const podeCompartilhar = arquivo => !navigator.canShare || navigator.canShare({files: [arquivo]});
+        let arquivo = podeCompartilhar(json) ? json : (podeCompartilhar(texto) ? texto : null);
+        if (!arquivo) {
+          informarProjeto("This device cannot share project files. Download the JSON and attach it manually.", true);
+          return;
+        }
+        try {
+          await navigator.share({files: [arquivo], title: titulo, text: "Stringing Calculator project"});
+          informarProjeto(arquivo === json ? "Project sent to the share menu as JSON." :
+            "Project sent as a .txt attachment containing JSON; this app can open it too.");
+        } catch (erro) {
+          if (erro.name !== "AbortError") {
+            console.error(erro);
+            informarProjeto("Could not share this file. Use Save JSON and attach it manually.", true);
+          }
+        }
+      }
+
+      async function abrirProjetoDoGithub() {
+        const nome = seletorGithub.value;
+        if (!nome || !/^[^/\\]+\.json$/i.test(nome)) return;
+        btnAbrirGithub.disabled = true;
+        informarProjeto(`Opening ${nome}...`);
+        try {
+          const urls = [];
+          if (location.protocol === "http:" || location.protocol === "https:") {
+            // On GitHub Pages this is same-origin and reads the repository files directly.
+            urls.push(new URL(encodeURIComponent(nome), document.baseURI).href);
+          }
+          // Also works when the HTML is opened locally or hosted elsewhere.
+          urls.push(`https://raw.githubusercontent.com/${REPOSITORIO_GITHUB}/${RAMO_GITHUB}/${encodeURIComponent(nome)}`);
+          let ultimoErro;
+          let carregado = false;
+          for (const url of [...new Set(urls)]) {
+            try {
+              const resposta = await fetch(url, {cache: "no-cache"});
+              if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+              const projeto = await resposta.json();
+              carregarDadosProjeto(projeto);
+              carregado = true;
+              break;
+            } catch (erro) {
+              ultimoErro = erro;
+            }
+          }
+          if (!carregado) throw ultimoErro || new Error("Project could not be loaded");
+          informarProjeto(`Opened GitHub project: ${nome}. Changes are local until you save/share them.`);
+        } catch (erro) {
+          console.error(erro);
+          informarProjeto(`Unable to open ${nome}. Check your internet connection or download its JSON from GitHub and use Open local project.`, true);
+        } finally {
+          btnAbrirGithub.disabled = !seletorGithub.value;
+        }
       }
 
       function abrirProjeto(event) {
-        const arquivo = event.target.files[0];
+        const input = event.target;
+        const arquivo = input.files?.[0];
         if (!arquivo) return;
         const leitor = new FileReader();
         leitor.onload = function(e) {
           try {
             const projeto = JSON.parse(e.target.result);
-            const nomeProjeto = document.getElementById("nomeProjeto");
-            const comentariosProjeto = document.getElementById("comentariosProjeto");
-            const wireMaker = document.getElementById("wireMaker");
-            const pitchA1 = document.getElementById("pitchA1");
-            const transposicaoSemitons = document.getElementById("transposicaoSemitons");
-            const sfLimit = document.getElementById("sfLimit");
-            const smallestWireF2 = document.getElementById("smallestWireF2");
-            const refDiamC2 = document.getElementById("refDiamC2");
-            if (nomeProjeto) {
-              nomeProjeto.value = projeto.nomeProjeto ?? "";
-            }
-            if (comentariosProjeto) {
-              comentariosProjeto.value = projeto.comentariosProjeto ?? "";
-            }
-            atualizarTituloProjeto();
-            if (wireMaker) {
-              wireMaker.value = projeto.wireMaker ?? "malcolmRose";
-            }
-            if (pitchA1) {
-              pitchA1.value = projeto.pitchA1 ?? "";
-            }
-            if (transposicaoSemitons) {
-              transposicaoSemitons.value = projeto.transposicaoSemitons ?? "0";
-                                 atualizarDescricaoTransposicao();
-            }
-            if (sfLimit) {
-              sfLimit.value = projeto.sfLimit ?? "";
-            }
-            if (smallestWireF2) {
-              smallestWireF2.value = projeto.smallestWireF2 ?? "";
-              smallestWireF2.dataset.indice = projeto.smallestWireF2Indice ?? "0";
-            }
-            if (refDiamC2) {
-              refDiamC2.value = projeto.refDiamC2 ?? "";
-            }
-            const linhas = document.querySelectorAll("#tabela tbody tr");
-            linhas.forEach(tr => {
-              const nota = tr.children[0].textContent.trim();
-              const inputComp = tr.children[1].querySelector("input");
-              const diamInput = tr.querySelector(".calcdiam-input");
-              const tdComp = tr.children[1];
-              const dadosNota = projeto.notas?.[nota];
-              if (inputComp) {
-                const valor = dadosNota?.comprimento ?? "";
-                inputComp.value = valor;
-                if (valor === "" || valor === "0" || Number(valor) === 0) {
-                  tdComp.classList.add("vazio");
-                } else {
-                  tdComp.classList.remove("vazio");
-                }
-              }
-              if (diamInput) {
-                diamInput.dataset.ajuste = dadosNota?.ajusteGauge ?? "0";
-              }
-            });
-            aplicarPitch();
-            calcularMaxWireF2();
-            atualizarFrequenciasTabela();
-            recalcularTudo();
-            event.target.value = "";
+            carregarDadosProjeto(projeto);
+            informarProjeto(`Opened local project: ${arquivo.name}`);
           } catch (erro) {
-            alert("Não foi possível abrir o arquivo do projeto.");
-            event.target.value = "";
+            console.error(erro);
+            informarProjeto(`Could not open ${arquivo.name}: ${erro.message}`, true);
+          } finally {
+            input.value = "";
           }
+        };
+        leitor.onerror = function() {
+          informarProjeto("Could not read the selected file.", true);
+          input.value = "";
         };
         leitor.readAsText(arquivo);
       }
       const arquivoProjetoInput = document.getElementById("arquivoProjeto");
-      if (arquivoProjetoInput) {
-        arquivoProjetoInput.addEventListener("change", abrirProjeto);
-      }
+      if (arquivoProjetoInput) arquivoProjetoInput.addEventListener("change", abrirProjeto);
+      listarProjetosGithub();
 
       function getIndiceDiametroMaisProximo(valorCalculado) {
         const diametros = getDiametrosDisponiveisDoFabricante();
