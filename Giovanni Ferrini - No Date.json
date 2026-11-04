@@ -1,0 +1,268 @@
+{
+  "nomeProjeto": "Giovanni Ferrini - No Date",
+  "comentariosProjeto": "Manual(s): One\nDisposition: 2x8'\nRegister layout: >8\n                 <8\n\nCompass: GG–f³\nLocation: Museum für Musikinstrumente der Universität Leipzig\nIdentification number: 89\nSource: Hubert Henkel, Kielinstrumente (Leipzig: VEB Deutscher Verlag für Musik, 1979), 97.\nCopyright © VEB Deutscher Verlag für Musik Leipzig 1979.\nReprinted by permission of Deutscher Verlag für Musik, Leipzig.\nUsed by permission of the Museum für Musikinstrumente der Universität Leipzig.\n\nClick on \"Interpolate Lenghts\"",
+  "wireMaker": "malcolmRose",
+  "pitchA1": "415.3",
+  "sfLimit": "-2",
+  "smallestWireF2": "0.230",
+  "smallestWireF2Indice": "2",
+  "refDiamC2": "",
+  "notas": {
+    "EE": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "FF": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "FF#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "GG": {
+      "comprimento": "2014",
+      "ajusteGauge": "0"
+    },
+    "GG#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "AA": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "BBb": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "BB": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "C": {
+      "comprimento": "1878",
+      "ajusteGauge": "0"
+    },
+    "C#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "D": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "Eb": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "E": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "F": {
+      "comprimento": "1518",
+      "ajusteGauge": "0"
+    },
+    "F#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "G": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "Ab": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "A": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "Bb": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "B": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "c": {
+      "comprimento": "1070",
+      "ajusteGauge": "0"
+    },
+    "c#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "d": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "eb": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "e": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "f": {
+      "comprimento": "811",
+      "ajusteGauge": "0"
+    },
+    "f#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "g": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "ab": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "a": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "bb": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "b": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "c1": {
+      "comprimento": "528",
+      "ajusteGauge": "0"
+    },
+    "c#1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "d1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "eb1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "e1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "f1": {
+      "comprimento": "386",
+      "ajusteGauge": "0"
+    },
+    "f#1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "g1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "ab1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "a1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "bb1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "b1": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "c2": {
+      "comprimento": "255",
+      "ajusteGauge": "0"
+    },
+    "c#2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "d2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "eb2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "e2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "f2": {
+      "comprimento": "190",
+      "ajusteGauge": "0"
+    },
+    "f#2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "g2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "ab2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "a2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "bb2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "b2": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "c3": {
+      "comprimento": "127",
+      "ajusteGauge": "0"
+    },
+    "c#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "d3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "d#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "e3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "f3": {
+      "comprimento": "99",
+      "ajusteGauge": "0"
+    },
+    "f#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "g3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    }
+  }
+}

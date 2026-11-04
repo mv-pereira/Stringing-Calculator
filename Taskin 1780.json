@@ -1,0 +1,268 @@
+{
+  "nomeProjeto": "Taskin 1780",
+  "comentariosProjeto": "",
+  "wireMaker": "malcolmRose",
+  "pitchA1": "392",
+  "sfLimit": "-2",
+  "smallestWireF2": "0.210",
+  "smallestWireF2Indice": "1",
+  "refDiamC2": "",
+  "notas": {
+    "EE": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "FF": {
+      "comprimento": "1720",
+      "ajusteGauge": "0"
+    },
+    "FF#": {
+      "comprimento": "1713",
+      "ajusteGauge": "0"
+    },
+    "GG": {
+      "comprimento": "1704",
+      "ajusteGauge": "0"
+    },
+    "GG#": {
+      "comprimento": "1694",
+      "ajusteGauge": "0"
+    },
+    "AA": {
+      "comprimento": "1685",
+      "ajusteGauge": "0"
+    },
+    "BBb": {
+      "comprimento": "1669",
+      "ajusteGauge": "0"
+    },
+    "BB": {
+      "comprimento": "1650",
+      "ajusteGauge": "0"
+    },
+    "C": {
+      "comprimento": "1625",
+      "ajusteGauge": "0"
+    },
+    "C#": {
+      "comprimento": "1595",
+      "ajusteGauge": "0"
+    },
+    "D": {
+      "comprimento": "1561",
+      "ajusteGauge": "0"
+    },
+    "Eb": {
+      "comprimento": "1525",
+      "ajusteGauge": "0"
+    },
+    "E": {
+      "comprimento": "1485",
+      "ajusteGauge": "0"
+    },
+    "F": {
+      "comprimento": "1446",
+      "ajusteGauge": "0"
+    },
+    "F#": {
+      "comprimento": "1405",
+      "ajusteGauge": "0"
+    },
+    "G": {
+      "comprimento": "1364",
+      "ajusteGauge": "0"
+    },
+    "Ab": {
+      "comprimento": "1324",
+      "ajusteGauge": "0"
+    },
+    "A": {
+      "comprimento": "1281",
+      "ajusteGauge": "0"
+    },
+    "Bb": {
+      "comprimento": "1241",
+      "ajusteGauge": "0"
+    },
+    "B": {
+      "comprimento": "1201",
+      "ajusteGauge": "0"
+    },
+    "c": {
+      "comprimento": "1159",
+      "ajusteGauge": "0"
+    },
+    "c#": {
+      "comprimento": "1116",
+      "ajusteGauge": "0"
+    },
+    "d": {
+      "comprimento": "1076",
+      "ajusteGauge": "0"
+    },
+    "eb": {
+      "comprimento": "1036",
+      "ajusteGauge": "0"
+    },
+    "e": {
+      "comprimento": "992",
+      "ajusteGauge": "0"
+    },
+    "f": {
+      "comprimento": "951",
+      "ajusteGauge": "0"
+    },
+    "f#": {
+      "comprimento": "911",
+      "ajusteGauge": "0"
+    },
+    "g": {
+      "comprimento": "870",
+      "ajusteGauge": "0"
+    },
+    "ab": {
+      "comprimento": "834",
+      "ajusteGauge": "0"
+    },
+    "a": {
+      "comprimento": "798",
+      "ajusteGauge": "0"
+    },
+    "bb": {
+      "comprimento": "763",
+      "ajusteGauge": "0"
+    },
+    "b": {
+      "comprimento": "729",
+      "ajusteGauge": "0"
+    },
+    "c1": {
+      "comprimento": "695",
+      "ajusteGauge": "0"
+    },
+    "c#1": {
+      "comprimento": "662",
+      "ajusteGauge": "0"
+    },
+    "d1": {
+      "comprimento": "629",
+      "ajusteGauge": "0"
+    },
+    "eb1": {
+      "comprimento": "599",
+      "ajusteGauge": "0"
+    },
+    "e1": {
+      "comprimento": "568",
+      "ajusteGauge": "0"
+    },
+    "f1": {
+      "comprimento": "537",
+      "ajusteGauge": "0"
+    },
+    "f#1": {
+      "comprimento": "511",
+      "ajusteGauge": "0"
+    },
+    "g1": {
+      "comprimento": "483",
+      "ajusteGauge": "0"
+    },
+    "ab1": {
+      "comprimento": "456",
+      "ajusteGauge": "0"
+    },
+    "a1": {
+      "comprimento": "431",
+      "ajusteGauge": "0"
+    },
+    "bb1": {
+      "comprimento": "407",
+      "ajusteGauge": "0"
+    },
+    "b1": {
+      "comprimento": "384",
+      "ajusteGauge": "0"
+    },
+    "c2": {
+      "comprimento": "363",
+      "ajusteGauge": "0"
+    },
+    "c#2": {
+      "comprimento": "342",
+      "ajusteGauge": "0"
+    },
+    "d2": {
+      "comprimento": "322",
+      "ajusteGauge": "0"
+    },
+    "eb2": {
+      "comprimento": "304",
+      "ajusteGauge": "0"
+    },
+    "e2": {
+      "comprimento": "286",
+      "ajusteGauge": "0"
+    },
+    "f2": {
+      "comprimento": "270",
+      "ajusteGauge": "0"
+    },
+    "f#2": {
+      "comprimento": "255",
+      "ajusteGauge": "0"
+    },
+    "g2": {
+      "comprimento": "240",
+      "ajusteGauge": "0"
+    },
+    "ab2": {
+      "comprimento": "226",
+      "ajusteGauge": "0"
+    },
+    "a2": {
+      "comprimento": "213",
+      "ajusteGauge": "0"
+    },
+    "bb2": {
+      "comprimento": "201",
+      "ajusteGauge": "0"
+    },
+    "b2": {
+      "comprimento": "189",
+      "ajusteGauge": "0"
+    },
+    "c3": {
+      "comprimento": "179",
+      "ajusteGauge": "0"
+    },
+    "c#3": {
+      "comprimento": "170",
+      "ajusteGauge": "0"
+    },
+    "d3": {
+      "comprimento": "161",
+      "ajusteGauge": "0"
+    },
+    "d#3": {
+      "comprimento": "154",
+      "ajusteGauge": "0"
+    },
+    "e3": {
+      "comprimento": "148",
+      "ajusteGauge": "0"
+    },
+    "f3": {
+      "comprimento": "141",
+      "ajusteGauge": "0"
+    },
+    "f#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "g3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    }
+  }
+}

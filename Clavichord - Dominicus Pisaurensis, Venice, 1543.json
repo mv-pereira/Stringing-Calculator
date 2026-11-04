@@ -1,0 +1,268 @@
+{
+  "nomeProjeto": "Clavichord - Dominicus Pisaurensis, Venice, 1543",
+  "comentariosProjeto": "Intended to be R + 5",
+  "wireMaker": "malcolmRose",
+  "pitchA1": "622.247",
+  "sfLimit": "-2",
+  "smallestWireF2": "0.190",
+  "smallestWireF2Indice": "0",
+  "refDiamC2": "",
+  "notas": {
+    "EE": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "FF": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "FF#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "GG": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "GG#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "AA": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "BBb": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "BB": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "C": {
+      "comprimento": "933",
+      "ajusteGauge": "0"
+    },
+    "C#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "D": {
+      "comprimento": "904",
+      "ajusteGauge": "0"
+    },
+    "Eb": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "E": {
+      "comprimento": "880",
+      "ajusteGauge": "0"
+    },
+    "F": {
+      "comprimento": "919",
+      "ajusteGauge": "0"
+    },
+    "F#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "G": {
+      "comprimento": "894",
+      "ajusteGauge": "0"
+    },
+    "Ab": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "A": {
+      "comprimento": "869",
+      "ajusteGauge": "0"
+    },
+    "Bb": {
+      "comprimento": "779",
+      "ajusteGauge": "0"
+    },
+    "B": {
+      "comprimento": "766",
+      "ajusteGauge": "0"
+    },
+    "c": {
+      "comprimento": "756",
+      "ajusteGauge": "0"
+    },
+    "c#": {
+      "comprimento": "745",
+      "ajusteGauge": "0"
+    },
+    "d": {
+      "comprimento": "733",
+      "ajusteGauge": "0"
+    },
+    "eb": {
+      "comprimento": "601.5",
+      "ajusteGauge": "0"
+    },
+    "e": {
+      "comprimento": "581",
+      "ajusteGauge": "0"
+    },
+    "f": {
+      "comprimento": "570",
+      "ajusteGauge": "0"
+    },
+    "f#": {
+      "comprimento": "545",
+      "ajusteGauge": "0"
+    },
+    "g": {
+      "comprimento": "534.5",
+      "ajusteGauge": "0"
+    },
+    "ab": {
+      "comprimento": "510",
+      "ajusteGauge": "0"
+    },
+    "a": {
+      "comprimento": "476.5",
+      "ajusteGauge": "0"
+    },
+    "bb": {
+      "comprimento": "466.5",
+      "ajusteGauge": "0"
+    },
+    "b": {
+      "comprimento": "450.5",
+      "ajusteGauge": "0"
+    },
+    "c1": {
+      "comprimento": "418",
+      "ajusteGauge": "0"
+    },
+    "c#1": {
+      "comprimento": "392",
+      "ajusteGauge": "0"
+    },
+    "d1": {
+      "comprimento": "386",
+      "ajusteGauge": "0"
+    },
+    "eb1": {
+      "comprimento": "361.5",
+      "ajusteGauge": "0"
+    },
+    "e1": {
+      "comprimento": "347.5",
+      "ajusteGauge": "0"
+    },
+    "f1": {
+      "comprimento": "335",
+      "ajusteGauge": "0"
+    },
+    "f#1": {
+      "comprimento": "321",
+      "ajusteGauge": "0"
+    },
+    "g1": {
+      "comprimento": "302",
+      "ajusteGauge": "0"
+    },
+    "ab1": {
+      "comprimento": "287.5",
+      "ajusteGauge": "0"
+    },
+    "a1": {
+      "comprimento": "274.5",
+      "ajusteGauge": "0"
+    },
+    "bb1": {
+      "comprimento": "259",
+      "ajusteGauge": "0"
+    },
+    "b1": {
+      "comprimento": "246.5",
+      "ajusteGauge": "0"
+    },
+    "c2": {
+      "comprimento": "234.5",
+      "ajusteGauge": "0"
+    },
+    "c#2": {
+      "comprimento": "224.5",
+      "ajusteGauge": "0"
+    },
+    "d2": {
+      "comprimento": "210",
+      "ajusteGauge": "0"
+    },
+    "eb2": {
+      "comprimento": "198.5",
+      "ajusteGauge": "0"
+    },
+    "e2": {
+      "comprimento": "188.5",
+      "ajusteGauge": "0"
+    },
+    "f2": {
+      "comprimento": "178",
+      "ajusteGauge": "0"
+    },
+    "f#2": {
+      "comprimento": "168.5",
+      "ajusteGauge": "0"
+    },
+    "g2": {
+      "comprimento": "159",
+      "ajusteGauge": "0"
+    },
+    "ab2": {
+      "comprimento": "150.5",
+      "ajusteGauge": "0"
+    },
+    "a2": {
+      "comprimento": "141",
+      "ajusteGauge": "0"
+    },
+    "bb2": {
+      "comprimento": "132",
+      "ajusteGauge": "0"
+    },
+    "b2": {
+      "comprimento": "126",
+      "ajusteGauge": "0"
+    },
+    "c3": {
+      "comprimento": "117.5",
+      "ajusteGauge": "0"
+    },
+    "c#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "d3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "d#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "e3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "f3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "f#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "g3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    }
+  }
+}
