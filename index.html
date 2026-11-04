@@ -2279,6 +2279,7 @@
       ];
       const REPOSITORIO_GITHUB = "mv-pereira/Stringing-Calculator";
       const RAMO_GITHUB = "main";
+      const PASTA_PROJETOS_GITHUB = "data";
       const seletorGithub = document.getElementById("projetosGithub");
       const btnAbrirGithub = document.getElementById("btnAbrirGithub");
       const statusProjetos = document.getElementById("statusProjetos");
@@ -2309,7 +2310,7 @@
         // The embedded list also works if GitHub's public API is rate-limited.
         preencherProjetosGithub(PROJETOS_GITHUB_PADRAO);
         try {
-          const url = `https://api.github.com/repos/${REPOSITORIO_GITHUB}/contents?ref=${RAMO_GITHUB}`;
+          const url = `https://api.github.com/repos/${REPOSITORIO_GITHUB}/contents/${PASTA_PROJETOS_GITHUB}?ref=${RAMO_GITHUB}`;
           const resposta = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
           if (!resposta.ok) throw new Error("GitHub API " + resposta.status);
           const arquivos = await resposta.json();
@@ -2468,10 +2469,10 @@
           const urls = [];
           if (location.protocol === "http:" || location.protocol === "https:") {
             // On GitHub Pages this is same-origin and reads the repository files directly.
-            urls.push(new URL(encodeURIComponent(nome), document.baseURI).href);
+            urls.push(new URL(`${PASTA_PROJETOS_GITHUB}/${encodeURIComponent(nome)}`, document.baseURI).href);
           }
           // Also works when the HTML is opened locally or hosted elsewhere.
-          urls.push(`https://raw.githubusercontent.com/${REPOSITORIO_GITHUB}/${RAMO_GITHUB}/${encodeURIComponent(nome)}`);
+          urls.push(`https://raw.githubusercontent.com/${REPOSITORIO_GITHUB}/${RAMO_GITHUB}/${PASTA_PROJETOS_GITHUB}/${encodeURIComponent(nome)}`);
           let ultimoErro;
           let carregado = false;
           for (const url of [...new Set(urls)]) {
