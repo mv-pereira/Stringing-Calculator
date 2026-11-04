@@ -1,0 +1,2977 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harpsichord String Calculator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 15px;
+        background: #f4f4f4;
+        color: #222;
+      }
+
+      input[readonly] {
+        background: #f0f0f0;
+      }
+
+      input:not([readonly]) {
+        background: #e6f2ff;
+        border: 1px solid #4a90e2;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 16px;
+      }
+
+      .painel {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 12px;
+        margin-bottom: 16px;
+      }
+
+      .campo-linha {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .campo-linha label {
+        font-weight: bold;
+      }
+
+      .campo-linha input {
+        padding: 10px;
+        font-size: 16px;
+        box-sizing: border-box;
+        width: 100%;
+      }
+
+      .campo-linha button {
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .status {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .tabela-container {
+        overflow-x: auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 8px;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 320px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+      }
+
+      th {
+        background: #e8e8e8;
+      }
+
+      tr:nth-child(even) {
+        background: #fafafa;
+      }
+
+      td input {
+        width: 100%;
+        border: none;
+        outline: none;
+        text-align: center;
+        font-size: 14px;
+        background: transparent;
+        padding: 4px;
+        box-sizing: border-box;
+      }
+
+      .vazio {
+        background: #fff8dc;
+      }
+
+      td input.sf-red-alert {
+        background: #ef9a9a !important;
+      }
+
+      td input.sf-brass-alert {
+        background: #f4d03f !important;
+      }
+
+      td input.sf-iron-alert {
+        background: #9e9e9e !important;
+        color: #000 !important;
+      }
+
+      th:nth-child(5),
+      td:nth-child(5) {
+        min-width: 130px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>String Calculator</h2>
+    <h2 id="tituloProjeto">Nicolas Dufour - 1683</h2>
+    <div class="painel">
+      <div class="campo-linha">
+        <label for="pitchA1">a¹ pitch level (Hz)</label>
+        <input type="number" id="pitchA1" step="0.1" value="415.3">
+      </div>
+      <div class="campo-linha">
+        <label for="freqC2">c² Frequency (Hz)</label>
+        <input type="number" id="freqC2" readonly>
+      </div>
+      <div class="status" id="statusPitch"> Valor atual de a¹ pitch level: 415,3 Hz </div>
+    </div>
+    <div class="painel">
+      <div class="campo-linha">
+        <label for="comentariosProjeto">Comments</label>
+        <textarea id="comentariosProjeto" placeholder="Enter your project comments here" rows="6" style="width:100%; padding:10px; font-size:16px; box-sizing:border-box; resize:vertical;"></textarea>
+      </div>
+    </div>
+<div class="painel">
+  <div class="campo-linha">
+    <label for="transposicaoSemitons">Transposition (semitones)</label>
+    <div style="display:flex; gap:6px; align-items:center;">
+      <button type="button" id="btnTransposicaoMenos">−</button>
+
+      <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+        <input type="number" id="transposicaoSemitons" step="1" value="0" readonly>
+        <div id="descricaoTransposicao" style="font-size:13px; color:#555; min-height:18px;"></div>
+      </div>
+
+      <button type="button" id="btnTransposicaoMais">+</button>
+    </div>
+  </div>
+</div>
+    <div class="painel">
+      <div class="campo-linha">
+        <label for="wireMaker">String Manufacturer</label>
+        <select id="wireMaker">
+          <option value="malcolmRose">Malcolm Rose</option>
+          <option value="instrumentWorkshop">Instrument Workshop</option>
+          <option value="zuckermann">Zuckermann (from wire-breaking tests)</option>
+          <option value="vogel">Vogel</option>
+          <option value="birkett">Birkett</option>
+          <option value="voss">Voss</option>
+          <option value="microfilFADD">Microfil FADD</option>
+          <option value="ormiston">Ormiston</option>
+          <option value="mountJoyModernSteel">Mount Joy (Modern Steel)</option>
+        </select>
+      </div>
+    </div>
+    <div class="painel">
+      <div class="campo-linha">
+        <label for="sfLimit">Safety Factor Limit</label>
+        <input type="number" id="sfLimit" step="0.1" value="-2">
+      </div>
+    </div>
+    <div class="painel">
+      <div class="campo-linha">
+        <label for="smallestWireF2">Smallest Wire Size f²</label>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <button type="button" id="btnSmallestWireMenos">−</button>
+          <input type="text" id="smallestWireF2" value="0.23" readonly>
+          <button type="button" id="btnSmallestWireMais">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="painel">
+      <div class="campo-linha">
+        <button type="button" onclick="recalcularDiametrosPadrao()"> Recalculate Diameters </button>
+      </div>
+    </div>
+    <div class="painel">
+      <div class="campo-linha">
+        <button type="button" onclick="limparComprimentos()">Clear Lengths</button>
+      </div>
+    </div>
+    <div class="tabela-container">
+      <table id="tabela">
+        <thead>
+          <tr>
+            <th>Note</th>
+            <th>Length (mm)</th>
+            <th>Frequency (Hz) Eq-Temp</th>
+            <th>fl-scale (m/s)</th>
+            <th>Commercial Diameter (Calculated)[mm]</th>
+            <th>Fl-Wire Red Brass</th>
+            <th>SF Red Brass</th>
+            <th>Fl-Wire Brass</th>
+            <th>SF Brass</th>
+            <th>Fl-Wire Iron</th>
+            <th>SF Iron</th>
+            <th>Tension (kgf)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="painel">
+      <div class="campo-linha">
+        <select id="metodoSpline">
+          <option value="natural">Natural spline (more stable, less curvature at ends)</option>
+          <option value="notaknot">Not-a-knot spline (less stable, preserves curvature)</option>
+        </select>
+        <button type="button" onclick="interpolarComprimentos()"> Interpolate Lengths From C's and F's </button>
+      </div>
+    </div>
+    <div class="painel">
+      <div class="campo-linha">
+        <label>Tipo de Encordoamento</label>
+        <input type="text" id="tipoEncordoamento" readonly>
+      </div>
+      <div class="campo-linha">
+        <label for="refDiamC2">c² Reference diameter (mm)</label>
+        <input type="number" id="refDiamC2" step="0.01" placeholder="ex: 0.25; 0,23">
+      </div>
+      <div class="campo-linha">
+        <label for="flWireC2">Fl-Wire c² (m/s)</label>
+        <input type="number" id="flWireC2" readonly>
+      </div>
+      <div class="campo-linha">
+        <label for="maxLenC2">c² Maximum Possible Length (m)</label>
+        <input type="number" id="maxLenC2" readonly>
+      </div>
+      <div class="painel">
+        <div class="campo-linha">
+          <label>Range of Working Lengths for c² (m)</label>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <div style="flex:1;">
+              <label style="font-size:12px;">-2 Safety Factor</label>
+              <input type="number" id="rangeC2_sf2" readonly>
+            </div>
+            <div style="flex:1;">
+              <label style="font-size:12px;">-3 Safety Factor</label>
+              <input type="number" id="rangeC2_sf3" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="painel">
+        <div class="campo-linha">
+          <button type="button" onclick="gerarGraficoFlScale()">Gerar gráfico do fl-scale</button>
+        </div>
+        <canvas id="graficoFlScale" height="120"></canvas>
+      </div>
+      <div class="painel">
+        <div class="campo-linha">
+          <label for="totalTension">Total Tension (kgf)</label>
+          <input type="number" id="totalTension" readonly>
+        </div>
+      </div>
+      <div class="painel">
+        <div class="campo-linha">
+          <button type="button" onclick="gerarGraficoTensao()">Gerar gráfico da tensão</button>
+        </div>
+        <canvas id="graficoTensao" height="120"></canvas>
+      </div>
+      <div class="painel">
+        <div class="campo-linha">
+          <button type="button" onclick="gerarGraficoComprimentoLog()">Gerar gráfico dos comprimentos (log)</button>
+        </div>
+        <canvas id="graficoComprimentoLog" height="120"></canvas>
+      </div>
+      <div class="painel">
+        <div class="campo-linha">
+          <label for="nomeProjeto">Nome do arquivo</label>
+          <input type="text" id="nomeProjeto" placeholder="Nicolas Dufour - 1683" value="Nicolas Dufour - 1683" />
+          <button type="button" onclick="salvarProjeto()">Salvar projeto</button>
+          <button type="button" onclick="document.getElementById('arquivoProjeto').click()">Abrir projeto</button>
+          <input type="file" id="arquivoProjeto" accept=".json" style="display:none">
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      let graficoFlScale = null;
+      let graficoTensao = null;
+      let graficoComprimentoLog = null;
+      const WIRE_DATABASE = {
+        malcolmRose: {
+          name: "Malcolm Rose",
+          materials: {
+            redBrass: {
+              name: "Red Brass",
+              density: 8769,
+              rows: [{
+                diameterMm: 0.36,
+                tsMPa: 626,
+                tsNm2: 626000000,
+                flWireMs: 134.1
+              }, {
+                diameterMm: 0.40,
+                tsMPa: 575,
+                tsNm2: 575000000,
+                flWireMs: 128.6
+              }, {
+                diameterMm: 0.44,
+                tsMPa: 604,
+                tsNm2: 604000000,
+                flWireMs: 131.8
+              }, {
+                diameterMm: 0.48,
+                tsMPa: 548,
+                tsNm2: 548000000,
+                flWireMs: 125.5
+              }, {
+                diameterMm: 0.52,
+                tsMPa: 554,
+                tsNm2: 554000000,
+                flWireMs: 126.1
+              }, {
+                diameterMm: 0.56,
+                tsMPa: 542,
+                tsNm2: 542000000,
+                flWireMs: 124.8
+              }, {
+                diameterMm: 0.60,
+                tsMPa: 559,
+                tsNm2: 559000000,
+                flWireMs: 126.7
+              }, {
+                diameterMm: 0.65,
+                tsMPa: 543,
+                tsNm2: 543000000,
+                flWireMs: 124.9
+              }]
+            },
+            brass: {
+              name: "Brass",
+              density: 8536,
+              rows: [{
+                diameterMm: 0.19,
+                tsMPa: 994,
+                tsNm2: 994000000,
+                flWireMs: 171.0
+              }, {
+                diameterMm: 0.21,
+                tsMPa: 990,
+                tsNm2: 990000000,
+                flWireMs: 170.7
+              }, {
+                diameterMm: 0.23,
+                tsMPa: 943,
+                tsNm2: 943000000,
+                flWireMs: 166.6
+              }, {
+                diameterMm: 0.25,
+                tsMPa: 948,
+                tsNm2: 948000000,
+                flWireMs: 167.0
+              }, {
+                diameterMm: 0.27,
+                tsMPa: 941,
+                tsNm2: 941000000,
+                flWireMs: 166.4
+              }, {
+                diameterMm: 0.30,
+                tsMPa: 918,
+                tsNm2: 918000000,
+                flWireMs: 164.4
+              }, {
+                diameterMm: 0.33,
+                tsMPa: 917,
+                tsNm2: 917000000,
+                flWireMs: 164.2
+              }, {
+                diameterMm: 0.36,
+                tsMPa: 903,
+                tsNm2: 903000000,
+                flWireMs: 162.9
+              }, {
+                diameterMm: 0.40,
+                tsMPa: 887,
+                tsNm2: 887000000,
+                flWireMs: 161.5
+              }, {
+                diameterMm: 0.44,
+                tsMPa: 870,
+                tsNm2: 870000000,
+                flWireMs: 160.0
+              }, {
+                diameterMm: 0.48,
+                tsMPa: 839,
+                tsNm2: 839000000,
+                flWireMs: 157.1
+              }, {
+                diameterMm: 0.52,
+                tsMPa: 808,
+                tsNm2: 808000000,
+                flWireMs: 154.1
+              }, {
+                diameterMm: 0.56,
+                tsMPa: 796,
+                tsNm2: 796000000,
+                flWireMs: 153.0
+              }, {
+                diameterMm: 0.60,
+                tsMPa: 823,
+                tsNm2: 823000000,
+                flWireMs: 155.6
+              }, {
+                diameterMm: 0.65,
+                tsMPa: 797,
+                tsNm2: 797000000,
+                flWireMs: 153.1
+              }, {
+                diameterMm: 0.70,
+                tsMPa: 773,
+                tsNm2: 773000000,
+                flWireMs: 150.8
+              }, {
+                diameterMm: 0.75,
+                tsMPa: 754,
+                tsNm2: 754000000,
+                flWireMs: 148.9
+              }, {
+                diameterMm: 0.80,
+                tsMPa: 736,
+                tsNm2: 736000000,
+                flWireMs: 147.1
+              }, {
+                diameterMm: 0.85,
+                tsMPa: 715,
+                tsNm2: 715000000,
+                flWireMs: 145.0
+              }, {
+                diameterMm: 0.90,
+                tsMPa: 695,
+                tsNm2: 695000000,
+                flWireMs: 143.0
+              }]
+            },
+            iron: {
+              name: "Iron",
+              density: 7769,
+              rows: [{
+                diameterMm: 0.19,
+                tsMPa: 1339,
+                tsNm2: 1339000000,
+                flWireMs: 207.2
+              }, {
+                diameterMm: 0.21,
+                tsMPa: 1309,
+                tsNm2: 1309000000,
+                flWireMs: 204.8
+              }, {
+                diameterMm: 0.23,
+                tsMPa: 1268,
+                tsNm2: 1268000000,
+                flWireMs: 201.6
+              }, {
+                diameterMm: 0.25,
+                tsMPa: 1223,
+                tsNm2: 1223000000,
+                flWireMs: 198.0
+              }, {
+                diameterMm: 0.27,
+                tsMPa: 1177,
+                tsNm2: 1177000000,
+                flWireMs: 194.2
+              }, {
+                diameterMm: 0.30,
+                tsMPa: 1109,
+                tsNm2: 1109000000,
+                flWireMs: 188.5
+              }, {
+                diameterMm: 0.33,
+                tsMPa: 1046,
+                tsNm2: 1046000000,
+                flWireMs: 183.1
+              }, {
+                diameterMm: 0.36,
+                tsMPa: 987,
+                tsNm2: 987000000,
+                flWireMs: 177.8
+              }]
+            }
+          }
+        },
+        instrumentWorkshop: {
+          name: "Instrument Workshop",
+          materials: {
+            iron: {
+              name: "Iron",
+              density: 7769,
+              rows: [{
+                diameterMm: 0.20,
+                tsMPa: 1379,
+                tsNm2: 1379000000,
+                flWireMs: 210.3
+              }, {
+                diameterMm: 0.23,
+                tsMPa: 1241,
+                tsNm2: 1241000000,
+                flWireMs: 199.5
+              }, {
+                diameterMm: 0.25,
+                tsMPa: 1241,
+                tsNm2: 1241000000,
+                flWireMs: 199.5
+              }, {
+                diameterMm: 0.28,
+                tsMPa: 1241,
+                tsNm2: 1241000000,
+                flWireMs: 199.5
+              }, {
+                diameterMm: 0.30,
+                tsMPa: 1241,
+                tsNm2: 1241000000,
+                flWireMs: 199.5
+              }, {
+                diameterMm: 0.33,
+                tsMPa: 1241,
+                tsNm2: 1241000000,
+                flWireMs: 199.5
+              }, {
+                diameterMm: 0.36,
+                tsMPa: 1241,
+                tsNm2: 1241000000,
+                flWireMs: 199.5
+              }, {
+                diameterMm: 0.41,
+                tsMPa: 1103,
+                tsNm2: 1103000000,
+                flWireMs: 188.1
+              }, {
+                diameterMm: 0.46,
+                tsMPa: 1103,
+                tsNm2: 1103000000,
+                flWireMs: 188.1
+              }, {
+                diameterMm: 0.51,
+                tsMPa: 966,
+                tsNm2: 966000000,
+                flWireMs: 175.9
+              }, {
+                diameterMm: 0.56,
+                tsMPa: 966,
+                tsNm2: 966000000,
+                flWireMs: 175.9
+              }, {
+                diameterMm: 0.61,
+                tsMPa: 966,
+                tsNm2: 966000000,
+                flWireMs: 175.9
+              }]
+            },
+            brass: {
+              name: "Yellow Brass (30% Zinc)",
+              density: 8536,
+              rows: [{
+                diameterMm: 0.28,
+                tsMPa: 745,
+                tsNm2: 745000000,
+                flWireMs: 148.4
+              }, {
+                diameterMm: 0.30,
+                tsMPa: 758,
+                tsNm2: 758000000,
+                flWireMs: 149.7
+              }, {
+                diameterMm: 0.33,
+                tsMPa: 748,
+                tsNm2: 748000000,
+                flWireMs: 148.7
+              }, {
+                diameterMm: 0.36,
+                tsMPa: 828,
+                tsNm2: 828000000,
+                flWireMs: 156.0
+              }, {
+                diameterMm: 0.41,
+                tsMPa: 828,
+                tsNm2: 828000000,
+                flWireMs: 156.0
+              }, {
+                diameterMm: 0.46,
+                tsMPa: 828,
+                tsNm2: 828000000,
+                flWireMs: 156.0
+              }, {
+                diameterMm: 0.51,
+                tsMPa: 828,
+                tsNm2: 828000000,
+                flWireMs: 156.0
+              }, {
+                diameterMm: 0.56,
+                tsMPa: 828,
+                tsNm2: 828000000,
+                flWireMs: 156.0
+              }, {
+                diameterMm: 0.61,
+                tsMPa: 828,
+                tsNm2: 828000000,
+                flWireMs: 156.0
+              }, {
+                diameterMm: 0.66,
+                tsMPa: 735,
+                tsNm2: 735000000,
+                flWireMs: 147.4
+              }]
+            },
+            redBrass: {
+              name: "Red Brass (15% Zinc)",
+              density: 8769,
+              rows: [{
+                diameterMm: 0.41,
+                tsMPa: 793,
+                tsNm2: 793000000,
+                flWireMs: 151.0
+              }, {
+                diameterMm: 0.46,
+                tsMPa: 724,
+                tsNm2: 724000000,
+                flWireMs: 144.3
+              }, {
+                diameterMm: 0.51,
+                tsMPa: 621,
+                tsNm2: 621000000,
+                flWireMs: 133.6
+              }, {
+                diameterMm: 0.56,
+                tsMPa: 552,
+                tsNm2: 552000000,
+                flWireMs: 125.9
+              }, {
+                diameterMm: 0.61,
+                tsMPa: 483,
+                tsNm2: 483000000,
+                flWireMs: 117.8
+              }]
+            }
+          }
+        },
+        zuckermann: {
+          name: "Zuckermann (from wire-breaking tests)",
+          materials: {
+            iron: {
+              name: "Iron",
+              density: 7769,
+              rows: [{
+                diameterMm: 0.20,
+                tsMPa: 1163,
+                tsNm2: 1163000000,
+                flWireMs: 192.7
+              }, {
+                diameterMm: 0.23,
+                tsMPa: 1238,
+                tsNm2: 1238000000,
+                flWireMs: 198.7
+              }, {
+                diameterMm: 0.25,
+                tsMPa: 1302,
+                tsNm2: 1302000000,
+                flWireMs: 203.8
+              }, {
+                diameterMm: 0.28,
+                tsMPa: 1254,
+                tsNm2: 1254000000,
+                flWireMs: 200.1
+              }, {
+                diameterMm: 0.30,
+                tsMPa: 1246,
+                tsNm2: 1246000000,
+                flWireMs: 199.4
+              }, {
+                diameterMm: 0.33,
+                tsMPa: 1242,
+                tsNm2: 1242000000,
+                flWireMs: 199.1
+              }, {
+                diameterMm: 0.36,
+                tsMPa: 1310,
+                tsNm2: 1310000000,
+                flWireMs: 204.5
+              }]
+            },
+            brass: {
+              name: "Yellow Brass",
+              density: 8536,
+              rows: [{
+                  diameterMm: 0.30,
+                  tsMPa: 776,
+                  tsNm2: 776000000,
+                  flWireMs: 150.7
+                }, {
+                  diameterMm: 0.33,
+                  tsMPa: 766,
+                  tsNm2: 766000000,
+                  flWireMs: 149.0
+                }, // Valor interpolado por mim
+                {
+                  diameterMm: 0.36,
+                  tsMPa: 755,
+                  tsNm2: 755000000,
+                  flWireMs: 148.0
+                }, {
+                  diameterMm: 0.41,
+                  tsMPa: 752,
+                  tsNm2: 752000000,
+                  flWireMs: 150.4
+                }, {
+                  diameterMm: 0.46,
+                  tsMPa: 758,
+                  tsNm2: 758000000,
+                  flWireMs: 148.7
+                }, {
+                  diameterMm: 0.51,
+                  tsMPa: 762,
+                  tsNm2: 762000000,
+                  flWireMs: 148.4
+                }, {
+                  diameterMm: 0.56,
+                  tsMPa: 755,
+                  tsNm2: 755000000,
+                  flWireMs: 148.0
+                }
+              ]
+            },
+            redBrass: {
+              name: "Red Brass",
+              density: 8769,
+              rows: [{
+                diameterMm: 0.36,
+                tsMPa: 804,
+                tsNm2: 804000000,
+                flWireMs: 151.8
+              }, {
+                diameterMm: 0.41,
+                tsMPa: 858,
+                tsNm2: 858000000,
+                flWireMs: 156.5
+              }, {
+                diameterMm: 0.46,
+                tsMPa: 807,
+                tsNm2: 807000000,
+                flWireMs: 152.4
+              }, {
+                diameterMm: 0.51,
+                tsMPa: 862,
+                tsNm2: 862000000,
+                flWireMs: 156.2
+              }, {
+                diameterMm: 0.56,
+                tsMPa: 822,
+                tsNm2: 822000000,
+                flWireMs: 152.8
+              }]
+            }
+          }
+        },
+        vogel: {
+          name: "Vogel",
+          materials: {
+            iron: {
+              name: "Westphalian Iron",
+              density: 7769,
+              rows: [{
+                diameterMm: 0.179,
+                tsMPa: 1750,
+                tsNm2: 1750000000,
+                flWireMs: 236.8
+              }, {
+                diameterMm: 0.188,
+                tsMPa: 1700,
+                tsNm2: 1700000000,
+                flWireMs: 233.4
+              }, {
+                diameterMm: 0.200,
+                tsMPa: 1660,
+                tsNm2: 1660000000,
+                flWireMs: 230.7
+              }, {
+                diameterMm: 0.211,
+                tsMPa: 1690,
+                tsNm2: 1690000000,
+                flWireMs: 232.7
+              }, {
+                diameterMm: 0.223,
+                tsMPa: 1660,
+                tsNm2: 1660000000,
+                flWireMs: 230.7
+              }, {
+                diameterMm: 0.235,
+                tsMPa: 1605,
+                tsNm2: 1605000000,
+                flWireMs: 226.8
+              }, {
+                diameterMm: 0.248,
+                tsMPa: 1605,
+                tsNm2: 1605000000,
+                flWireMs: 226.8
+              }, {
+                diameterMm: 0.263,
+                tsMPa: 1570,
+                tsNm2: 1570000000,
+                flWireMs: 224.3
+              }, {
+                diameterMm: 0.277,
+                tsMPa: 1565,
+                tsNm2: 1565000000,
+                flWireMs: 224.0
+              }, {
+                diameterMm: 0.292,
+                tsMPa: 1526,
+                tsNm2: 1526000000,
+                flWireMs: 221.2
+              }, {
+                diameterMm: 0.309,
+                tsMPa: 1505,
+                tsNm2: 1505000000,
+                flWireMs: 219.6
+              }, {
+                diameterMm: 0.326,
+                tsMPa: 1490,
+                tsNm2: 1490000000,
+                flWireMs: 218.5
+              }, {
+                diameterMm: 0.345,
+                tsMPa: 1403,
+                tsNm2: 1403000000,
+                flWireMs: 212.1
+              }, {
+                diameterMm: 0.364,
+                tsMPa: 1402,
+                tsNm2: 1402000000,
+                flWireMs: 212.0
+              }, {
+                diameterMm: 0.384,
+                tsMPa: 1358,
+                tsNm2: 1358000000,
+                flWireMs: 208.6
+              }, {
+                diameterMm: 0.406,
+                tsMPa: 1320,
+                tsNm2: 1320000000,
+                flWireMs: 205.7
+              }, {
+                diameterMm: 0.429,
+                tsMPa: 1296,
+                tsNm2: 1296000000,
+                flWireMs: 203.8
+              }, {
+                diameterMm: 0.453,
+                tsMPa: 1323,
+                tsNm2: 1323000000,
+                flWireMs: 205.9
+              }, {
+                diameterMm: 0.478,
+                tsMPa: 1309,
+                tsNm2: 1309000000,
+                flWireMs: 204.8
+              }, {
+                diameterMm: 0.506,
+                tsMPa: 1245,
+                tsNm2: 1245000000,
+                flWireMs: 199.8
+              }, {
+                diameterMm: 0.533,
+                tsMPa: 1240,
+                tsNm2: 1240000000,
+                flWireMs: 199.4
+              }, {
+                diameterMm: 0.563,
+                tsMPa: 1210,
+                tsNm2: 1210000000,
+                flWireMs: 196.9
+              }, {
+                diameterMm: 0.595,
+                tsMPa: 1178,
+                tsNm2: 1178000000,
+                flWireMs: 194.3
+              }, {
+                diameterMm: 0.628,
+                tsMPa: 1145,
+                tsNm2: 1145000000,
+                flWireMs: 191.6
+              }, {
+                diameterMm: 0.663,
+                tsMPa: 1116,
+                tsNm2: 1116000000,
+                flWireMs: 189.1
+              }, {
+                diameterMm: 0.702,
+                tsMPa: 1068,
+                tsNm2: 1068000000,
+                flWireMs: 185.0
+              }]
+            },
+            brass: {
+              name: "Stolberg Yellow Brass (30% Zinc)",
+              density: 8536,
+              rows: [{
+                diameterMm: 0.179,
+                tsMPa: 1024,
+                tsNm2: 1024000000,
+                flWireMs: 173.5
+              }, {
+                diameterMm: 0.190,
+                tsMPa: 1017,
+                tsNm2: 1017000000,
+                flWireMs: 173.0
+              }, {
+                diameterMm: 0.200,
+                tsMPa: 1038,
+                tsNm2: 1038000000,
+                flWireMs: 174.7
+              }, {
+                diameterMm: 0.211,
+                tsMPa: 1012,
+                tsNm2: 1012000000,
+                flWireMs: 172.5
+              }, {
+                diameterMm: 0.223,
+                tsMPa: 1024,
+                tsNm2: 1024000000,
+                flWireMs: 173.5
+              }, {
+                diameterMm: 0.235,
+                tsMPa: 1010,
+                tsNm2: 1010000000,
+                flWireMs: 172.4
+              }, {
+                diameterMm: 0.248,
+                tsMPa: 1018,
+                tsNm2: 1018000000,
+                flWireMs: 173.0
+              }, {
+                diameterMm: 0.262,
+                tsMPa: 966,
+                tsNm2: 966000000,
+                flWireMs: 168.6
+              }, {
+                diameterMm: 0.277,
+                tsMPa: 1004,
+                tsNm2: 1004000000,
+                flWireMs: 171.8
+              }, {
+                diameterMm: 0.292,
+                tsMPa: 1005,
+                tsNm2: 1005000000,
+                flWireMs: 171.9
+              }, {
+                diameterMm: 0.309,
+                tsMPa: 1003,
+                tsNm2: 1003000000,
+                flWireMs: 171.8
+              }, {
+                diameterMm: 0.326,
+                tsMPa: 982,
+                tsNm2: 982000000,
+                flWireMs: 169.9
+              }, {
+                diameterMm: 0.344,
+                tsMPa: 979,
+                tsNm2: 979000000,
+                flWireMs: 169.7
+              }, {
+                diameterMm: 0.364,
+                tsMPa: 985,
+                tsNm2: 985000000,
+                flWireMs: 170.2
+              }, {
+                diameterMm: 0.384,
+                tsMPa: 991,
+                tsNm2: 991000000,
+                flWireMs: 170.7
+              }, {
+                diameterMm: 0.406,
+                tsMPa: 963,
+                tsNm2: 963000000,
+                flWireMs: 168.3
+              }, {
+                diameterMm: 0.429,
+                tsMPa: 963,
+                tsNm2: 963000000,
+                flWireMs: 168.3
+              }, {
+                diameterMm: 0.453,
+                tsMPa: 891,
+                tsNm2: 891000000,
+                flWireMs: 161.9
+              }, {
+                diameterMm: 0.478,
+                tsMPa: 870,
+                tsNm2: 870000000,
+                flWireMs: 160.0
+              }, {
+                diameterMm: 0.505,
+                tsMPa: 884,
+                tsNm2: 884000000,
+                flWireMs: 161.2
+              }, {
+                diameterMm: 0.533,
+                tsMPa: 866,
+                tsNm2: 866000000,
+                flWireMs: 159.6
+              }, {
+                diameterMm: 0.563,
+                tsMPa: 919,
+                tsNm2: 919000000,
+                flWireMs: 164.4
+              }, {
+                diameterMm: 0.595,
+                tsMPa: 928,
+                tsNm2: 928000000,
+                flWireMs: 165.2
+              }, {
+                diameterMm: 0.628,
+                tsMPa: 906,
+                tsNm2: 906000000,
+                flWireMs: 163.2
+              }, {
+                diameterMm: 0.663,
+                tsMPa: 929,
+                tsNm2: 929000000,
+                flWireMs: 165.3
+              }, {
+                diameterMm: 0.701,
+                tsMPa: 941,
+                tsNm2: 941000000,
+                flWireMs: 166.4
+              }]
+            },
+            redBrass: {
+              name: "Märkisch Red Brass (15% Zinc)",
+              density: 8769,
+              rows: [{
+                diameterMm: 0.345,
+                tsMPa: 806,
+                tsNm2: 806000000,
+                flWireMs: 152.2
+              }, {
+                diameterMm: 0.364,
+                tsMPa: 800,
+                tsNm2: 800000000,
+                flWireMs: 151.6
+              }, {
+                diameterMm: 0.384,
+                tsMPa: 787,
+                tsNm2: 787000000,
+                flWireMs: 150.4
+              }, {
+                diameterMm: 0.406,
+                tsMPa: 762,
+                tsNm2: 762000000,
+                flWireMs: 148.0
+              }, {
+                diameterMm: 0.429,
+                tsMPa: 751,
+                tsNm2: 751000000,
+                flWireMs: 146.9
+              }, {
+                diameterMm: 0.453,
+                tsMPa: 714,
+                tsNm2: 714000000,
+                flWireMs: 143.2
+              }, {
+                diameterMm: 0.479,
+                tsMPa: 728,
+                tsNm2: 728000000,
+                flWireMs: 144.6
+              }, {
+                diameterMm: 0.506,
+                tsMPa: 705,
+                tsNm2: 705000000,
+                flWireMs: 142.3
+              }, {
+                diameterMm: 0.534,
+                tsMPa: 743,
+                tsNm2: 743000000,
+                flWireMs: 146.1
+              }, {
+                diameterMm: 0.564,
+                tsMPa: 735,
+                tsNm2: 735000000,
+                flWireMs: 145.3
+              }, {
+                diameterMm: 0.596,
+                tsMPa: 705,
+                tsNm2: 705000000,
+                flWireMs: 142.3
+              }, {
+                diameterMm: 0.629,
+                tsMPa: 695,
+                tsNm2: 695000000,
+                flWireMs: 141.3
+              }, {
+                diameterMm: 0.665,
+                tsMPa: 673,
+                tsNm2: 673000000,
+                flWireMs: 139.1
+              }, {
+                diameterMm: 0.702,
+                tsMPa: 642,
+                tsNm2: 642000000,
+                flWireMs: 135.8
+              }]
+            }
+          }
+        },
+        birkett: {
+          name: "Birkett",
+          materials: {
+            redBrass: {
+              name: "Red Brass",
+              density: 8769,
+              rows: []
+            },
+            brass: {
+              name: "Brass",
+              density: 8536,
+              rows: []
+            },
+            iron: {
+              name: "Iron",
+              density: 7769,
+              rows: [{
+                diameterMm: 0.204,
+                tsMPa: 1272,
+                tsNm2: 1272000000,
+                flWireMs: 201.9
+              }, {
+                diameterMm: 0.226,
+                tsMPa: 1221,
+                tsNm2: 1221000000,
+                flWireMs: 197.9
+              }, {
+                diameterMm: 0.249,
+                tsMPa: 1206,
+                tsNm2: 1206000000,
+                flWireMs: 196.6
+              }, {
+                diameterMm: 0.275,
+                tsMPa: 1184,
+                tsNm2: 1184000000,
+                flWireMs: 194.8
+              }, {
+                diameterMm: 0.304,
+                tsMPa: 1137,
+                tsNm2: 1137000000,
+                flWireMs: 190.9
+              }, {
+                diameterMm: 0.335,
+                tsMPa: 1061,
+                tsNm2: 1061000000,
+                flWireMs: 184.4
+              }, {
+                diameterMm: 0.370,
+                tsMPa: 1019,
+                tsNm2: 1019000000,
+                flWireMs: 180.7
+              }]
+            }
+          }
+        },
+        voss: {
+          name: "Voss",
+          materials: {
+            redBrass: {
+              name: "Red Brass",
+              density: 8769,
+              rows: []
+            },
+            brass: {
+              name: "Brass",
+              density: 8536,
+              rows: []
+            },
+            iron: {
+              name: "Iron",
+              density: 7769,
+              rows: [{
+                diameterMm: 0.25,
+                tsMPa: 1188,
+                tsNm2: 1188000000,
+                flWireMs: 194.7
+              }, {
+                diameterMm: 0.28,
+                tsMPa: 1204,
+                tsNm2: 1204000000,
+                flWireMs: 196.0
+              }, {
+                diameterMm: 0.30,
+                tsMPa: 1204,
+                tsNm2: 1204000000,
+                flWireMs: 196.0
+              }, {
+                diameterMm: 0.33,
+                tsMPa: 1221,
+                tsNm2: 1221000000,
+                flWireMs: 197.4
+              }, {
+                diameterMm: 0.35,
+                tsMPa: 1225,
+                tsNm2: 1225000000,
+                flWireMs: 197.7
+              }, {
+                diameterMm: 0.40,
+                tsMPa: 1229,
+                tsNm2: 1229000000,
+                flWireMs: 198.1
+              }]
+            }
+          }
+        },
+        microfilFADD: {
+          name: "Microfil FADD",
+          materials: {
+            redBrass: {
+              name: "Red Brass",
+              density: 8769,
+              rows: []
+            },
+            brass: {
+              name: "Brass",
+              density: 8536,
+              rows: []
+            },
+            iron: {
+              name: "Iron",
+              density: 7769,
+              rows: [{
+                diameterMm: 0.19,
+                tsMPa: 1430,
+                tsNm2: 1430000000,
+                flWireMs: 213.6
+              }, {
+                diameterMm: 0.23,
+                tsMPa: 1196,
+                tsNm2: 1196000000,
+                flWireMs: 195.4
+              }, {
+                diameterMm: 0.25,
+                tsMPa: 1531,
+                tsNm2: 1531000000,
+                flWireMs: 221.1
+              }, {
+                diameterMm: 0.27,
+                tsMPa: 1310,
+                tsNm2: 1310000000,
+                flWireMs: 204.5
+              }]
+            }
+          }
+        },
+        ormiston: {
+          name: "Ormiston",
+          materials: {
+            redBrass: {
+              name: "Red Brass",
+              density: 8769,
+              rows: []
+            },
+            brass: {
+              name: "Brass",
+              density: 8536,
+              rows: []
+            },
+            iron: {
+              name: "Iron",
+              density: 7769,
+              rows: [{
+                diameterMm: 0.19,
+                tsMPa: 1135,
+                tsNm2: 1135000000,
+                flWireMs: 190.3
+              }, {
+                diameterMm: 0.23,
+                tsMPa: 859,
+                tsNm2: 859000000,
+                flWireMs: 185.6
+              }, {
+                diameterMm: 0.45,
+                tsMPa: 957,
+                tsNm2: 957000000,
+                flWireMs: 174.7
+              }]
+            }
+          }
+        },
+        mountJoyModernSteel: {
+          name: "Mount Joy (Modern Steel)",
+          materials: {
+            redBrass: {
+              name: "Red Brass",
+              density: 8769,
+              rows: []
+            },
+            brass: {
+              name: "Brass",
+              density: 8536,
+              rows: []
+            },
+            iron: {
+              name: "Modern Steel",
+              density: 7843,
+              rows: [{
+                diameterMm: 0.20,
+                tsMPa: 2934.0,
+                tsNm2: 2934000000,
+                flWireMs: 290.65
+              }, {
+                diameterMm: 0.23,
+                tsMPa: 2841.5,
+                tsNm2: 2841500000,
+                flWireMs: 302.20
+              }, {
+                diameterMm: 0.25,
+                tsMPa: 2809.5,
+                tsNm2: 2809500000,
+                flWireMs: 299.75
+              }, {
+                diameterMm: 0.28,
+                tsMPa: 2772.0,
+                tsNm2: 2772000000,
+                flWireMs: 297.95
+              }, {
+                diameterMm: 0.31,
+                tsMPa: 2737.0,
+                tsNm2: 2737000000,
+                flWireMs: 296.45
+              }, {
+                diameterMm: 0.33,
+                tsMPa: 2706.5,
+                tsNm2: 2706500000,
+                flWireMs: 294.40
+              }, {
+                diameterMm: 0.36,
+                tsMPa: 2678.5,
+                tsNm2: 2678500000,
+                flWireMs: 292.45
+              }, {
+                diameterMm: 0.41,
+                tsMPa: 2617.0,
+                tsNm2: 2617000000,
+                flWireMs: 292.80
+              }]
+            }
+          }
+        }
+      };
+      const SAFETY_MULTIPLIERS = [{
+        semitones: 0.00,
+        multiplier: 1.000
+      }, {
+        semitones: -0.25,
+        multiplier: 0.986
+      }, {
+        semitones: -0.50,
+        multiplier: 0.972
+      }, {
+        semitones: -0.75,
+        multiplier: 0.958
+      }, {
+        semitones: -1.00,
+        multiplier: 0.944
+      }, {
+        semitones: -1.25,
+        multiplier: 0.930
+      }, {
+        semitones: -1.50,
+        multiplier: 0.917
+      }, {
+        semitones: -1.75,
+        multiplier: 0.904
+      }, {
+        semitones: -2.00,
+        multiplier: 0.891
+      }, {
+        semitones: -2.25,
+        multiplier: 0.878
+      }, {
+        semitones: -2.50,
+        multiplier: 0.866
+      }, {
+        semitones: -2.75,
+        multiplier: 0.853
+      }, {
+        semitones: -3.00,
+        multiplier: 0.841
+      }, {
+        semitones: -3.25,
+        multiplier: 0.829
+      }, {
+        semitones: -3.50,
+        multiplier: 0.817
+      }, {
+        semitones: -3.75,
+        multiplier: 0.805
+      }, {
+        semitones: -4.00,
+        multiplier: 0.794
+      }, {
+        semitones: -4.25,
+        multiplier: 0.782
+      }, {
+        semitones: -4.50,
+        multiplier: 0.771
+      }, {
+        semitones: -4.75,
+        multiplier: 0.760
+      }, {
+        semitones: -5.00,
+        multiplier: 0.749
+      }, {
+        semitones: -5.25,
+        multiplier: 0.738
+      }, {
+        semitones: -5.50,
+        multiplier: 0.728
+      }, {
+        semitones: -5.75,
+        multiplier: 0.717
+      }, {
+        semitones: -6.00,
+        multiplier: 0.707
+      }, {
+        semitones: -6.25,
+        multiplier: 0.697
+      }, {
+        semitones: -6.50,
+        multiplier: 0.687
+      }, {
+        semitones: -6.75,
+        multiplier: 0.677
+      }, {
+        semitones: -7.00,
+        multiplier: 0.667
+      }];
+      const dados = [
+        ["EE", null],
+        ["FF", null],
+        ["FF#", null],
+        ["GG", 1729.6],
+        ["GG#", null],
+        ["AA", 1724.2],
+        ["BBb", null],
+        ["BB", 1718.9],
+        ["C", 1712.2],
+        ["C#", 1703.4],
+        ["D", 1692.2],
+        ["Eb", 1677.9],
+        ["E", 1659.4],
+        ["F", 1635.3],
+        ["F#", 1603.9],
+        ["G", 1563.3],
+        ["Ab", 1513.7],
+        ["A", 1460.7],
+        ["Bb", 1406.9],
+        ["B", 1354.3],
+        ["c", 1300.5],
+        ["c#", 1248.6],
+        ["d", 1194.3],
+        ["eb", 1142.4],
+        ["e", 1090.9],
+        ["f", 1040.8],
+        ["f#", 991.1],
+        ["g", 943.5],
+        ["ab", 897.3],
+        ["a", 851.7],
+        ["bb", 807.7],
+        ["b", 765.1],
+        ["c1", 726.7],
+        ["c#1", 683.7],
+        ["d1", 644.6],
+        ["eb1", 607.5],
+        ["e1", 572.1],
+        ["f1", 538.3],
+        ["f#1", 507.0],
+        ["g1", 477.2],
+        ["ab1", 449.5],
+        ["a1", 423.3],
+        ["bb1", 398.6],
+        ["b1", 375.7],
+        ["c2", 354.4],
+        ["c#2", 335.1],
+        ["d2", 315.3],
+        ["eb2", 297.6],
+        ["e2", 281.1],
+        ["f2", 265.6],
+        ["f#2", 251.1],
+        ["g2", 237.5],
+        ["ab2", 224.7],
+        ["a2", 212.7],
+        ["bb2", 201.5],
+        ["b2", 190.8],
+        ["c3", 181.2],
+        ["c#3", 171.6],
+        ["d3", 162.7],
+        ["d#3", null],
+        ["e3", null],
+        ["f3", null],
+        ["f#3", null],
+        ["g3", null],
+      ];
+
+      function atualizarFrequenciasTabela() {
+        const freqC2 = parseFloat(document.getElementById("freqC2").value);
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        const indiceC2Soante = getIndiceNotaSoante("c2");
+        if (isNaN(freqC2) || indiceC2Soante === -1) {
+          linhas.forEach(tr => {
+            const inputFreq = tr.querySelector(".freq-input");
+            if (inputFreq) inputFreq.value = "";
+          });
+          atualizarFlScaleTabela();
+          return;
+        }
+        linhas.forEach((tr, indice) => {
+          const inputFreq = tr.querySelector(".freq-input");
+          if (!inputFreq) return;
+          const deslocamento = indice - indiceC2Soante;
+          const frequencia = freqC2 * Math.pow(2, deslocamento / 12);
+          inputFreq.value = frequencia.toFixed(3);
+        });
+        atualizarFlScaleTabela();
+        calcularIntercept();
+        atualizarCalculatedDiameter();
+      }
+      const tbody = document.querySelector("#tabela tbody");
+      dados.forEach(([nota, comprimento], indice) => {
+        const tr = document.createElement("tr");
+        const tdNota = document.createElement("td");
+        tdNota.textContent = nota;
+        const tdComp = document.createElement("td");
+        const inputComp = document.createElement("input");
+        inputComp.type = "number";
+        inputComp.step = "0.1";
+        inputComp.min = "0";
+        inputComp.placeholder = "vazio";
+        if (comprimento !== null) {
+          inputComp.value = comprimento;
+        } else {
+          tdComp.classList.add("vazio");
+        }
+
+        function atualizarEstado() {
+          const valor = parseFloat(inputComp.value);
+          if (!inputComp.value || valor === 0 || isNaN(valor)) {
+            tdComp.classList.add("vazio");
+            inputComp.value = "";
+          } else {
+            tdComp.classList.remove("vazio");
+          }
+          recalcularTudo();
+        }
+        inputComp.addEventListener("input", atualizarEstado);
+        tdComp.appendChild(inputComp);
+        const tdFreq = document.createElement("td");
+        const inputFreq = document.createElement("input");
+        inputFreq.type = "number";
+        inputFreq.step = "0.001";
+        inputFreq.readOnly = true;
+        inputFreq.className = "freq-input";
+        tdFreq.appendChild(inputFreq);
+        const tdFlScale = document.createElement("td");
+        const inputFlScale = document.createElement("input");
+        inputFlScale.type = "number";
+        inputFlScale.step = "0.001";
+        inputFlScale.readOnly = true;
+        inputFlScale.className = "flscale-input";
+        tdFlScale.appendChild(inputFlScale);
+        const tdCalcDiam = document.createElement("td");
+        const btnMenos = document.createElement("button");
+        btnMenos.textContent = "−";
+        btnMenos.type = "button";
+        const inputCalcDiam = document.createElement("input");
+        inputCalcDiam.type = "text";
+        inputCalcDiam.readOnly = true;
+        inputCalcDiam.className = "calcdiam-input";
+        const btnMais = document.createElement("button");
+        btnMais.textContent = "+";
+        btnMais.type = "button";
+        tdCalcDiam.style.display = "flex";
+        tdCalcDiam.style.gap = "4px";
+        tdCalcDiam.style.alignItems = "center";
+        tdCalcDiam.appendChild(btnMenos);
+        tdCalcDiam.appendChild(inputCalcDiam);
+        tdCalcDiam.appendChild(btnMais);
+        inputCalcDiam.dataset.ajuste = "0";
+        btnMais.addEventListener("click", () => {
+          let ajusteAtual = parseInt(inputCalcDiam.dataset.ajuste || "0", 10);
+          ajusteAtual++;
+          inputCalcDiam.dataset.ajuste = String(ajusteAtual);
+          recalcularTudo();
+        });
+        btnMenos.addEventListener("click", () => {
+          let ajusteAtual = parseInt(inputCalcDiam.dataset.ajuste || "0", 10);
+          ajusteAtual--;
+          inputCalcDiam.dataset.ajuste = String(ajusteAtual);
+          recalcularTudo();
+        });
+        const tdFlRed = document.createElement("td");
+        const inputFlRed = document.createElement("input");
+        inputFlRed.type = "number";
+        inputFlRed.step = "0.1";
+        inputFlRed.readOnly = true;
+        inputFlRed.className = "fl-red-input";
+        tdFlRed.appendChild(inputFlRed);
+        const tdSfRed = document.createElement("td");
+        const inputSfRed = document.createElement("input");
+        inputSfRed.type = "number";
+        inputSfRed.step = "0.01";
+        inputSfRed.readOnly = true;
+        inputSfRed.className = "sf-red-input";
+        tdSfRed.appendChild(inputSfRed);
+        const tdFlBrass = document.createElement("td");
+        const inputFlBrass = document.createElement("input");
+        inputFlBrass.type = "number";
+        inputFlBrass.step = "0.1";
+        inputFlBrass.readOnly = true;
+        inputFlBrass.className = "fl-brass-input";
+        tdFlBrass.appendChild(inputFlBrass);
+        const tdSfBrass = document.createElement("td");
+        const inputSfBrass = document.createElement("input");
+        inputSfBrass.type = "number";
+        inputSfBrass.step = "0.01";
+        inputSfBrass.readOnly = true;
+        inputSfBrass.className = "sf-brass-input";
+        tdSfBrass.appendChild(inputSfBrass);
+        const tdFlIron = document.createElement("td");
+        const inputFlIron = document.createElement("input");
+        inputFlIron.type = "number";
+        inputFlIron.step = "0.1";
+        inputFlIron.readOnly = true;
+        inputFlIron.className = "fl-iron-input";
+        tdFlIron.appendChild(inputFlIron);
+        const tdSfIron = document.createElement("td");
+        const inputSfIron = document.createElement("input");
+        inputSfIron.type = "number";
+        inputSfIron.step = "0.01";
+        inputSfIron.readOnly = true;
+        inputSfIron.className = "sf-iron-input";
+        tdSfIron.appendChild(inputSfIron);
+        const tdTension = document.createElement("td");
+        const inputTension = document.createElement("input");
+        inputTension.type = "number";
+        inputTension.step = "0.01";
+        inputTension.readOnly = true;
+        inputTension.className = "tension-input";
+        tdTension.appendChild(inputTension);
+        tr.appendChild(tdNota);
+        tr.appendChild(tdComp);
+        tr.appendChild(tdFreq);
+        tr.appendChild(tdFlScale);
+        tr.appendChild(tdCalcDiam);
+        tr.appendChild(tdFlRed);
+        tr.appendChild(tdSfRed);
+        tr.appendChild(tdFlBrass);
+        tr.appendChild(tdSfBrass);
+        tr.appendChild(tdFlIron);
+        tr.appendChild(tdSfIron);
+        tr.appendChild(tdTension);
+        tbody.appendChild(tr);
+        calcularIntercept();
+        atualizarCalculatedDiameter();
+      });
+
+      function aplicarPitch() {
+        const inputPitch = document.getElementById("pitchA1");
+        const campoC2 = document.getElementById("freqC2");
+        const status = document.getElementById("statusPitch");
+        const valor = parseFloat(inputPitch.value);
+        if (isNaN(valor) || valor <= 0) {
+          status.textContent = "Digite um valor válido para a¹ pitch level (Hz).";
+          campoC2.value = "";
+          recalcularTudo();
+          return;
+        }
+        const c2 = valor * Math.pow(2, 3 / 12);
+        campoC2.value = c2.toFixed(3);
+        status.textContent = "Valor atual de a¹ pitch level: " + valor.toFixed(1) + " Hz";
+        recalcularTudo();
+      }
+
+      function atualizarTipoEncordoamento() {
+        const tr = getLinhaDaNotaSoante("c2");
+        const campoTipo = document.getElementById("tipoEncordoamento");
+        if (!tr) {
+          campoTipo.value = "";
+          return;
+        }
+        const input = tr.children[1].querySelector("input");
+        const comprimentoC2 = parseFloat(input?.value);
+        if (isNaN(comprimentoC2)) {
+          campoTipo.value = "";
+          return;
+        }
+        if (comprimentoC2 >= 249 && comprimentoC2 <= 305) {
+          campoTipo.value = "Brass-strung Instrument";
+        } else if (comprimentoC2 >= 316 && comprimentoC2 <= 387) {
+          campoTipo.value = "Mixed-strung Instrument";
+        } else {
+          campoTipo.value = "";
+        }
+      }
+
+      function atualizarFlWireC2() {
+        const campoTipo = document.getElementById("tipoEncordoamento");
+        const campoDiam = document.getElementById("refDiamC2");
+        const campoFlWire = document.getElementById("flWireC2");
+        if (!campoTipo || !campoDiam || !campoFlWire) return;
+        const tipo = campoTipo.value.trim();
+        const diametro = parseFloat(campoDiam.value);
+        if (isNaN(diametro)) {
+          campoFlWire.value = "";
+          return;
+        }
+        let tabela = null;
+        const fabricante = getFabricanteAtual();
+        if (tipo === "Brass-strung Instrument") {
+          tabela = fabricante.materials.brass.rows;
+        } else if (tipo === "Mixed-strung Instrument") {
+          tabela = fabricante.materials.iron.rows;
+        } else {
+          campoFlWire.value = "";
+          return;
+        }
+        const linha = tabela.find(r => r.diameterMm === diametro);
+        if (!linha) {
+          campoFlWire.value = "";
+          return;
+        }
+        campoFlWire.value = linha.flWireMs.toFixed(1);
+        atualizarMaxLengthC2();
+      }
+
+      function atualizarMaxLengthC2() {
+        const flWire = parseFloat(document.getElementById("flWireC2").value);
+        const freq = parseFloat(document.getElementById("freqC2").value);
+        const campo = document.getElementById("maxLenC2");
+        if (isNaN(flWire) || isNaN(freq) || freq === 0) {
+          campo.value = "";
+          return;
+        }
+        const resultado = flWire / freq;
+        campo.value = resultado.toFixed(4);
+        atualizarRangeC2();
+      }
+
+      function atualizarRangeC2() {
+        const maxLen = parseFloat(document.getElementById("maxLenC2").value);
+        const campoSF2 = document.getElementById("rangeC2_sf2");
+        const campoSF3 = document.getElementById("rangeC2_sf3");
+        if (isNaN(maxLen)) {
+          campoSF2.value = "";
+          campoSF3.value = "";
+          return;
+        }
+        const resultado1 = maxLen * 0.891;
+        const resultado2 = maxLen * 0.841;
+        campoSF2.value = resultado1.toFixed(4);
+        campoSF3.value = resultado2.toFixed(4);
+      }
+
+      function atualizarFlScaleTabela() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        linhas.forEach(tr => {
+          const compInput = tr.children[1].querySelector("input");
+          const freqInput = tr.querySelector(".freq-input");
+          const flScaleInput = tr.querySelector(".flscale-input");
+          const comprimento = parseFloat(compInput.value);
+          const freq = parseFloat(freqInput.value);
+          if (isNaN(comprimento) || isNaN(freq)) {
+            flScaleInput.value = "";
+            return;
+          }
+          const resultado = freq * (comprimento / 1000);
+          flScaleInput.value = resultado.toFixed(3);
+        });
+      }
+
+      function calcularMaxWireF2() {
+        const input = document.getElementById("smallestWireF2");
+        if (!input) return;
+        const valor = parseFloat(input.value);
+        if (isNaN(valor)) {
+          window.maxWireF2 = null;
+          return;
+        }
+        const resultado = getMaxWireFromFabricante(valor);
+        if (resultado === null) {
+          window.maxWireF2 = null;
+          return;
+        }
+        window.maxWireF2 = resultado;
+        calcularIntercept();
+      }
+
+      function calcularIntercept() {
+        if (window.maxWireF2 === null || window.maxWireF2 === undefined || isNaN(window.maxWireF2)) {
+          window.intercept = null;
+          atualizarCalculatedDiameter();
+          return;
+        }
+        const tr = getLinhaDaNotaSoante("f2");
+        if (!tr) {
+          window.intercept = null;
+          atualizarCalculatedDiameter();
+          return;
+        }
+        const compInput = tr.children[1].querySelector("input");
+        const freqInput = tr.querySelector(".freq-input");
+        const comprimentoF2 = parseFloat(compInput?.value);
+        const freqF2 = parseFloat(freqInput?.value);
+        if (isNaN(comprimentoF2) || isNaN(freqF2)) {
+          window.intercept = null;
+          return;
+        }
+        const parte1 = Math.log10(Math.pow(window.maxWireF2, 2) * comprimentoF2);
+        const parte2 = -1.41 * Math.log10(freqF2);
+        window.intercept = parte1 - parte2;
+        atualizarCalculatedDiameter();
+      }
+
+      function atualizarCalculatedDiameter() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        if (window.intercept === null || window.intercept === undefined || isNaN(window.intercept)) {
+          linhas.forEach(tr => {
+            const diamInput = tr.querySelector(".calcdiam-input");
+            if (diamInput) diamInput.value = "";
+          });
+          return;
+        }
+        linhas.forEach(tr => {
+          const compInput = tr.children[1].querySelector("input");
+          const freqInput = tr.querySelector(".freq-input");
+          const diamInput = tr.querySelector(".calcdiam-input");
+          const comprimento = parseFloat(compInput.value);
+          const freq = parseFloat(freqInput.value);
+          if (!diamInput || isNaN(comprimento) || isNaN(freq) || comprimento === 0) {
+            diamInput.value = "";
+            return;
+          }
+          const diametroCalculado = Math.sqrt(Math.pow(10, (-1.41 * Math.log10(freq)) + window.intercept) / comprimento);
+          const ajuste = parseInt(diamInput.dataset.ajuste || "0", 10) || 0;
+          const materialAlvo = getMaterialAlvoDaLinha(tr);
+          const diametroEscolhido = getDiametroComAjustePorMaterial(diametroCalculado, ajuste, materialAlvo);
+          if (diametroEscolhido === null) {
+            diamInput.value = diametroCalculado.toFixed(4);
+            return;
+          }
+          const real = diametroEscolhido.toFixed(3);
+          const bruto = diametroCalculado.toFixed(4);
+          diamInput.value = real + " (" + bruto + ")";
+        });
+        atualizarMateriaisESafetyFactors();
+      }
+
+      function extrairDiametroComercial(texto) {
+        if (!texto) return null;
+        const primeiraParte = String(texto).split(" ")[0].trim();
+        const valor = parseFloat(primeiraParte);
+        return isNaN(valor) ? null : valor;
+      }
+
+      function buscarFlWirePorDiametro(materialRows, diametro) {
+        const tolerancia = 0.0001;
+        const linha = materialRows.find(r => Math.abs(r.diameterMm - diametro) < tolerancia);
+        return linha ? linha.flWireMs : null;
+      }
+
+      function calcularSafetyFactor(flScale, flWire) {
+        if (isNaN(flScale) || isNaN(flWire) || flScale <= 0 || flWire <= 0) {
+          return null;
+        }
+        return 39.86 * Math.log10(flScale / flWire);
+      }
+
+      function atualizarMateriaisESafetyFactors() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        linhas.forEach(tr => {
+          const calcDiamInput = tr.querySelector(".calcdiam-input");
+          const flScaleInput = tr.querySelector(".flscale-input");
+          const flRedInput = tr.querySelector(".fl-red-input");
+          const sfRedInput = tr.querySelector(".sf-red-input");
+          const flBrassInput = tr.querySelector(".fl-brass-input");
+          const sfBrassInput = tr.querySelector(".sf-brass-input");
+          const flIronInput = tr.querySelector(".fl-iron-input");
+          const sfIronInput = tr.querySelector(".sf-iron-input");
+          const diametroComercial = extrairDiametroComercial(calcDiamInput ? calcDiamInput.value : "");
+          const flScale = parseFloat(flScaleInput ? flScaleInput.value : "");
+          const limpar = () => {
+            // limpar valores
+             if (flRedInput) flRedInput.value = "";
+             if (sfRedInput) sfRedInput.value = "";
+
+             if (flBrassInput) flBrassInput.value = "";
+             if (sfBrassInput) sfBrassInput.value = "";
+
+             if (flIronInput) flIronInput.value = "";
+            if (sfIronInput) sfIronInput.value = "";
+
+            // limpar cores
+            if (sfRedInput) {
+               sfRedInput.style.background = "";
+               sfRedInput.style.color = "";
+            }
+
+            if (sfBrassInput) {
+               sfBrassInput.style.background = "";
+               sfBrassInput.style.color = "";
+            }
+
+            if (sfIronInput) {
+               sfIronInput.style.background = "";
+               sfIronInput.style.color = "";
+             }
+          };
+          if (diametroComercial === null || isNaN(flScale)) {
+            limpar();
+            return;
+          }
+          const fabricante = getFabricanteAtual();
+          const flRed = buscarFlWirePorDiametro(fabricante.materials.redBrass.rows, diametroComercial);
+          const flBrass = buscarFlWirePorDiametro(fabricante.materials.brass.rows, diametroComercial);
+          const flIron = buscarFlWirePorDiametro(fabricante.materials.iron.rows, diametroComercial);
+          const sfRed = flRed !== null ? calcularSafetyFactor(flScale, flRed) : null;
+          const sfBrass = flBrass !== null ? calcularSafetyFactor(flScale, flBrass) : null;
+          const sfIron = flIron !== null ? calcularSafetyFactor(flScale, flIron) : null;
+          flRedInput.value = flRed !== null ? flRed.toFixed(1) : "";
+          sfRedInput.value = sfRed !== null ? sfRed.toFixed(2) : "";
+          flBrassInput.value = flBrass !== null ? flBrass.toFixed(1) : "";
+          sfBrassInput.value = sfBrass !== null ? sfBrass.toFixed(2) : "";
+          flIronInput.value = flIron !== null ? flIron.toFixed(1) : "";
+          sfIronInput.value = sfIron !== null ? sfIron.toFixed(2) : "";
+          aplicarCoresSafetyFactor(sfRedInput, sfRed, "red");
+          aplicarCoresSafetyFactor(sfBrassInput, sfBrass, "brass");
+          aplicarCoresSafetyFactor(sfIronInput, sfIron, "iron");
+          atualizarTensao();
+        });
+      }
+
+      function aplicarCoresSafetyFactor(input, valor, tipo) {
+        if (!input) return;
+        input.style.background = "";
+        input.style.color = "";
+        const limite = parseFloat(document.getElementById("sfLimit").value);
+        if (valor === null || valor === undefined || isNaN(valor) || valor >= limite) {
+          return;
+        }
+        if (tipo === "red") {
+          input.style.background = "#ef9a9a";
+        } else if (tipo === "brass") {
+          input.style.background = "#f4d03f";
+        } else if (tipo === "iron") {
+          input.style.background = "#9e9e9e";
+          input.style.color = "#000";
+        }
+      }
+
+      function gerarGraficoFlScale() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        const notas = [];
+        const valores = [];
+        linhas.forEach(tr => {
+          const nota = tr.children[0].textContent.trim();
+          const flScaleInput = tr.querySelector(".flscale-input");
+          const flScale = parseFloat(flScaleInput ? flScaleInput.value : "");
+          if (!isNaN(flScale)) {
+            notas.push(nota);
+            valores.push(flScale);
+          }
+        });
+        if (valores.length === 0) {
+          alert("Ainda não há valores de fl-scale para plotar.");
+          return;
+        }
+        const canvas = document.getElementById("graficoFlScale");
+        const ctx = canvas.getContext("2d");
+        if (graficoFlScale) {
+          graficoFlScale.destroy();
+        }
+        graficoFlScale = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: notas,
+            datasets: [{
+              label: "fl-scale (m/s)",
+              data: valores,
+              borderWidth: 1, // linha mais fina
+              pointRadius: 2, // tamanho do ponto
+              pointHoverRadius: 3, // quando passa o mouse
+              pointHitRadius: 6, // área clicável no celular
+              borderColor: "blue",
+              backgroundColor: "rgba(0,0,255,0.1)",
+              borderWidth: 2,
+              fill: false,
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "Notas"
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "fl-scale (m/s)"
+                }
+              }
+            }
+          }
+        });
+      }
+
+      function atualizarTensao() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        linhas.forEach(tr => {
+          const freq = parseFloat(tr.querySelector(".freq-input")?.value);
+          const comp = parseFloat(tr.children[1].querySelector("input")?.value);
+          const diamTexto = tr.querySelector(".calcdiam-input")?.value;
+          const diam = extrairDiametroComercial(diamTexto);
+          const sfRed = parseFloat(tr.querySelector(".sf-red-input")?.value);
+          const sfBrass = parseFloat(tr.querySelector(".sf-brass-input")?.value);
+          const tensionInput = tr.querySelector(".tension-input");
+          if (!tensionInput || isNaN(freq) || isNaN(comp) || diam === null) {
+            tensionInput.value = "";
+            return;
+          }
+          let density;
+          const fabricante = getFabricanteAtual();
+          const limite = parseFloat(document.getElementById("sfLimit").value);
+          if (!isNaN(sfRed) && sfRed < limite) {
+            density = fabricante.materials.redBrass.density;
+          } else if (!isNaN(sfBrass) && sfBrass < limite) {
+            density = fabricante.materials.brass.density;
+          } else {
+            density = fabricante.materials.iron.density;
+          }
+          const F = freq;
+          const K = diam / 1000;
+          const B = comp / 1000;
+          const tension = (Math.pow(F, 2) * Math.pow(K, 2) * Math.pow(B, 2) * Math.PI * density) / 9.80665;
+          tensionInput.value = tension.toFixed(2);
+        });
+        atualizarTensaoTotal();
+      }
+
+      function atualizarTensaoTotal() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        let soma = 0;
+        linhas.forEach(tr => {
+          const tensionInput = tr.querySelector(".tension-input");
+          const valor = parseFloat(tensionInput ? tensionInput.value : "");
+          if (!isNaN(valor)) {
+            soma += valor;
+          }
+        });
+        const campoTotal = document.getElementById("totalTension");
+        if (campoTotal) {
+          campoTotal.value = soma.toFixed(2);
+        }
+      }
+
+      function gerarGraficoTensao() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        const labels = [];
+        const valores = [];
+        const materiais = [];
+        const coresPontos = [];
+        let bitolaAnterior = null;
+        let temDados = false;
+        linhas.forEach(tr => {
+          const nota = tr.children[0].textContent.trim();
+          const tensionInput = tr.querySelector(".tension-input");
+          const tensao = parseFloat(tensionInput ? tensionInput.value : "");
+          const diamTexto = tr.querySelector(".calcdiam-input")?.value;
+          const bitolaAtual = extrairDiametroComercial(diamTexto);
+          const sfRed = parseFloat(tr.querySelector(".sf-red-input")?.value);
+          const sfBrass = parseFloat(tr.querySelector(".sf-brass-input")?.value);
+          const limite = parseFloat(document.getElementById("sfLimit").value);
+          if (!isNaN(tensao) && bitolaAtual !== null) {
+            if (bitolaAnterior !== null && bitolaAtual !== bitolaAnterior) {
+              labels.push("");
+              valores.push(null);
+              materiais.push(null);
+              coresPontos.push("rgba(0,0,0,0)");
+            }
+            let materialUsado = "iron";
+            let cor = "#9e9e9e";
+            if (!isNaN(sfRed) && sfRed < limite) {
+              materialUsado = "redBrass";
+              cor = "#d32f2f";
+            } else if (!isNaN(sfBrass) && sfBrass < limite) {
+              materialUsado = "brass";
+              cor = "#c9a227";
+            }
+            labels.push(nota);
+            valores.push(tensao);
+            materiais.push(materialUsado);
+            coresPontos.push(cor);
+            bitolaAnterior = bitolaAtual;
+            temDados = true;
+          }
+        });
+        if (!temDados) {
+          alert("Ainda não há valores de tensão para plotar.");
+          return;
+        }
+        const canvas = document.getElementById("graficoTensao");
+        const ctx = canvas.getContext("2d");
+        if (graficoTensao) {
+          graficoTensao.destroy();
+        }
+        graficoTensao = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [{
+              label: "Tension (kgf)",
+              data: valores,
+              fill: false,
+              tension: 0,
+              spanGaps: false,
+              borderWidth: 2,
+              pointRadius: 2,
+              pointHoverRadius: 3,
+              pointHitRadius: 6,
+              pointBackgroundColor: coresPontos,
+              pointBorderColor: coresPontos,
+              segment: {
+                borderColor: (context) => {
+                  const i = context.p0DataIndex;
+                  const material = materiais[i];
+                  if (material === "redBrass") return "#d32f2f";
+                  if (material === "brass") return "#c9a227";
+                  return "#9e9e9e";
+                }
+              }
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "Notas"
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "Tension (kgf)"
+                }
+              }
+            }
+          }
+        });
+      }
+
+      function getFabricanteAtual() {
+        const select = document.getElementById("wireMaker");
+        const chave = select ? select.value : "malcolmRose";
+        return WIRE_DATABASE[chave];
+      }
+
+      function getDiametrosDisponiveisDoFabricante() {
+        const fabricante = getFabricanteAtual();
+        if (!fabricante || !fabricante.materials) return [];
+        const todos = [...(fabricante.materials.redBrass?.rows || []).map(r => r.diameterMm), ...(fabricante.materials.brass?.rows || []).map(r => r.diameterMm), ...(fabricante.materials.iron?.rows || []).map(r => r.diameterMm)];
+        return [...new Set(todos)].sort((a, b) => a - b);
+      }
+
+      function getDiametroMaisProximo(valor) {
+        const diametros = getDiametrosDisponiveisDoFabricante();
+        if (!diametros.length || isNaN(valor)) return null;
+        let melhor = diametros[0];
+        let menorDiferenca = Math.abs(valor - melhor);
+        diametros.forEach(d => {
+          const diferenca = Math.abs(valor - d);
+          if (diferenca < menorDiferenca || (diferenca === menorDiferenca && d > melhor)) {
+            menorDiferenca = diferenca;
+            melhor = d;
+          }
+        });
+        return melhor;
+      }
+
+      function getMaxWireFromFabricante(valor) {
+        const diametros = getDiametrosDisponiveisDoFabricante();
+        if (!diametros.length || isNaN(valor)) return null;
+        for (let i = 0; i < diametros.length; i++) {
+          const atual = diametros[i];
+          const proximo = diametros[i + 1];
+          if (!proximo) {
+            return atual;
+          }
+          const limiteSuperior = ((atual + proximo) / 2) - 0.001;
+          if (valor >= atual && valor <= limiteSuperior) {
+            return limiteSuperior;
+          }
+        }
+        return null;
+      }
+
+      function recalcularDiametrosPadrao() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        linhas.forEach(tr => {
+          const diamInput = tr.querySelector(".calcdiam-input");
+          if (diamInput) {
+            diamInput.dataset.ajuste = "0";
+          }
+        });
+        recalcularTudo();
+      }
+
+      function salvarProjeto() {
+        const projeto = {
+          nomeProjeto: document.getElementById("nomeProjeto")?.value || "",
+          comentariosProjeto: document.getElementById("comentariosProjeto")?.value || "",
+          wireMaker: document.getElementById("wireMaker")?.value || "malcolmRose",
+          pitchA1: document.getElementById("pitchA1")?.value || "",
+          transposicaoSemitons: document.getElementById("transposicaoSemitons")?.value || "0",
+          sfLimit: document.getElementById("sfLimit")?.value || "",
+          smallestWireF2: document.getElementById("smallestWireF2")?.value || "",
+          smallestWireF2Indice: document.getElementById("smallestWireF2")?.dataset?.indice || "0",
+          refDiamC2: document.getElementById("refDiamC2")?.value || "",
+          notas: {}
+        };
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        linhas.forEach(tr => {
+          const nota = tr.children[0].textContent.trim();
+          const inputComp = tr.children[1].querySelector("input");
+          const diamInput = tr.querySelector(".calcdiam-input");
+          projeto.notas[nota] = {
+            comprimento: inputComp ? inputComp.value : "",
+            ajusteGauge: diamInput ? (diamInput.dataset.ajuste || "0") : "0"
+          };
+        });
+        const blob = new Blob(
+          [JSON.stringify(projeto, null, 2)], {
+            type: "application/json"
+          });
+        const url = URL.createObjectURL(blob);
+        let nomeArquivo = projeto.nomeProjeto.trim();
+        if (!nomeArquivo) nomeArquivo = "cravo-projeto";
+        if (!nomeArquivo.endsWith(".json")) nomeArquivo += ".json";
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = nomeArquivo;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function abrirProjeto(event) {
+        const arquivo = event.target.files[0];
+        if (!arquivo) return;
+        const leitor = new FileReader();
+        leitor.onload = function(e) {
+          try {
+            const projeto = JSON.parse(e.target.result);
+            const nomeProjeto = document.getElementById("nomeProjeto");
+            const comentariosProjeto = document.getElementById("comentariosProjeto");
+            const wireMaker = document.getElementById("wireMaker");
+            const pitchA1 = document.getElementById("pitchA1");
+            const transposicaoSemitons = document.getElementById("transposicaoSemitons");
+            const sfLimit = document.getElementById("sfLimit");
+            const smallestWireF2 = document.getElementById("smallestWireF2");
+            const refDiamC2 = document.getElementById("refDiamC2");
+            if (nomeProjeto) {
+              nomeProjeto.value = projeto.nomeProjeto ?? "";
+            }
+            if (comentariosProjeto) {
+              comentariosProjeto.value = projeto.comentariosProjeto ?? "";
+            }
+            atualizarTituloProjeto();
+            if (wireMaker) {
+              wireMaker.value = projeto.wireMaker ?? "malcolmRose";
+            }
+            if (pitchA1) {
+              pitchA1.value = projeto.pitchA1 ?? "";
+            }
+            if (transposicaoSemitons) {
+              transposicaoSemitons.value = projeto.transposicaoSemitons ?? "0";
+                                 atualizarDescricaoTransposicao();
+            }
+            if (sfLimit) {
+              sfLimit.value = projeto.sfLimit ?? "";
+            }
+            if (smallestWireF2) {
+              smallestWireF2.value = projeto.smallestWireF2 ?? "";
+              smallestWireF2.dataset.indice = projeto.smallestWireF2Indice ?? "0";
+            }
+            if (refDiamC2) {
+              refDiamC2.value = projeto.refDiamC2 ?? "";
+            }
+            const linhas = document.querySelectorAll("#tabela tbody tr");
+            linhas.forEach(tr => {
+              const nota = tr.children[0].textContent.trim();
+              const inputComp = tr.children[1].querySelector("input");
+              const diamInput = tr.querySelector(".calcdiam-input");
+              const tdComp = tr.children[1];
+              const dadosNota = projeto.notas?.[nota];
+              if (inputComp) {
+                const valor = dadosNota?.comprimento ?? "";
+                inputComp.value = valor;
+                if (valor === "" || valor === "0" || Number(valor) === 0) {
+                  tdComp.classList.add("vazio");
+                } else {
+                  tdComp.classList.remove("vazio");
+                }
+              }
+              if (diamInput) {
+                diamInput.dataset.ajuste = dadosNota?.ajusteGauge ?? "0";
+              }
+            });
+            aplicarPitch();
+            calcularMaxWireF2();
+            atualizarFrequenciasTabela();
+            recalcularTudo();
+            event.target.value = "";
+          } catch (erro) {
+            alert("Não foi possível abrir o arquivo do projeto.");
+            event.target.value = "";
+          }
+        };
+        leitor.readAsText(arquivo);
+      }
+      const arquivoProjetoInput = document.getElementById("arquivoProjeto");
+      if (arquivoProjetoInput) {
+        arquivoProjetoInput.addEventListener("change", abrirProjeto);
+      }
+
+      function getIndiceDiametroMaisProximo(valorCalculado) {
+        const diametros = getDiametrosDisponiveisDoFabricante();
+        if (!diametros.length || isNaN(valorCalculado)) return -1;
+        let melhorIndice = 0;
+        let menorDiferenca = Math.abs(valorCalculado - diametros[0]);
+        diametros.forEach((d, i) => {
+          const diferenca = Math.abs(valorCalculado - d);
+          if (diferenca < menorDiferenca || (diferenca === menorDiferenca && d > diametros[melhorIndice])) {
+            menorDiferenca = diferenca;
+            melhorIndice = i;
+          }
+        });
+        return melhorIndice;
+      }
+
+      function getDiametroComAjusteReal(valorCalculado, ajuste) {
+        const diametros = getDiametrosDisponiveisDoFabricante();
+        if (!diametros.length || isNaN(valorCalculado)) return null;
+        const indiceBase = getIndiceDiametroMaisProximo(valorCalculado);
+        if (indiceBase < 0) return null;
+        const indiceFinal = Math.max(0, Math.min(diametros.length - 1, indiceBase + ajuste));
+        return diametros[indiceFinal];
+      }
+
+      function ajustarSmallestWireAoFabricante() {
+        const input = document.getElementById("smallestWireF2");
+        if (!input) return;
+        const valorAtual = parseFloat(input.value);
+        const diametros = getDiametrosDisponiveisDoFabricante();
+        if (!diametros.length) {
+          input.value = "";
+          return;
+        }
+        if (isNaN(valorAtual)) {
+          input.value = diametros[0].toFixed(3);
+          return;
+        }
+        const indice = getIndiceDiametroMaisProximo(valorAtual);
+        if (indice < 0) {
+          input.value = diametros[0].toFixed(3);
+          return;
+        }
+        input.dataset.indice = String(indice);
+        input.value = diametros[indice].toFixed(3);
+      }
+
+      function configurarControleSmallestWire() {
+        const input = document.getElementById("smallestWireF2");
+        const btnMenos = document.getElementById("btnSmallestWireMenos");
+        const btnMais = document.getElementById("btnSmallestWireMais");
+        if (!input || !btnMenos || !btnMais) return;
+        const atualizarPorIndice = (novoIndice) => {
+          const diametros = getDiametrosDisponiveisDoFabricante();
+          if (!diametros.length) {
+            input.value = "";
+            input.dataset.indice = "0";
+            recalcularTudo();
+            return;
+          }
+          const indiceFinal = Math.max(0, Math.min(diametros.length - 1, novoIndice));
+          input.dataset.indice = String(indiceFinal);
+          input.value = diametros[indiceFinal].toFixed(3);
+          recalcularTudo();
+        };
+        btnMais.addEventListener("click", () => {
+          const indiceAtual = parseInt(input.dataset.indice || "0", 10) || 0;
+          atualizarPorIndice(indiceAtual + 1);
+        });
+        btnMenos.addEventListener("click", () => {
+          const indiceAtual = parseInt(input.dataset.indice || "0", 10) || 0;
+          atualizarPorIndice(indiceAtual - 1);
+        });
+      }
+
+      function getDiametrosDoMaterial(materialKey) {
+        const fabricante = getFabricanteAtual();
+        const rows = fabricante?.materials?.[materialKey]?.rows || [];
+        return rows.map(r => r.diameterMm).sort((a, b) => a - b);
+      }
+
+      function getMaterialAlvoDaLinha(tr) {
+        const tipoInstrumento = document.getElementById("tipoEncordoamento")?.value || "";
+        const limite = parseFloat(document.getElementById("sfLimit")?.value ?? "-2");
+        const sfRed = parseFloat(tr.querySelector(".sf-red-input")?.value);
+        const sfBrass = parseFloat(tr.querySelector(".sf-brass-input")?.value);
+        if (tipoInstrumento === "Brass-strung Instrument") {
+          if (!isNaN(sfRed) && sfRed < limite) return "redBrass";
+          return "brass";
+        }
+        if (tipoInstrumento === "Mixed-strung Instrument") {
+          if (!isNaN(sfRed) && sfRed < limite) return "redBrass";
+          if (!isNaN(sfBrass) && sfBrass < limite) return "brass";
+          return "iron";
+        }
+        return "iron";
+      }
+
+      function getIndiceDiametroMaisProximoEmLista(valorCalculado, diametros) {
+        if (!diametros.length || isNaN(valorCalculado)) return -1;
+        let melhorIndice = 0;
+        let menorDiferenca = Math.abs(valorCalculado - diametros[0]);
+        diametros.forEach((d, i) => {
+          const diferenca = Math.abs(valorCalculado - d);
+          if (diferenca < menorDiferenca || (diferenca === menorDiferenca && d > diametros[melhorIndice])) {
+            menorDiferenca = diferenca;
+            melhorIndice = i;
+          }
+        });
+        return melhorIndice;
+      }
+
+      function getDiametroComAjustePorMaterial(valorCalculado, ajuste, materialKey) {
+        const diametros = getDiametrosDoMaterial(materialKey);
+        if (!diametros.length || isNaN(valorCalculado)) return null;
+        const indiceBase = getIndiceDiametroMaisProximoEmLista(valorCalculado, diametros);
+        if (indiceBase < 0) return null;
+        const indiceFinal = Math.max(0, Math.min(diametros.length - 1, indiceBase + ajuste));
+        return diametros[indiceFinal];
+      }
+
+      function limparComprimentos() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        linhas.forEach(tr => {
+          const tdComp = tr.children[1];
+          const inputComp = tdComp?.querySelector("input");
+          const diamInput = tr.querySelector(".calcdiam-input");
+          if (inputComp) {
+            inputComp.value = "";
+            tdComp.classList.add("vazio");
+          }
+          if (diamInput) {
+            diamInput.dataset.ajuste = "0";
+          }
+        });
+        const refDiamC2 = document.getElementById("refDiamC2");
+        if (refDiamC2) {
+          refDiamC2.value = "";
+        }
+        recalcularTudo();
+      }
+
+      function atualizarTituloProjeto() {
+        const campoNome = document.getElementById("nomeProjeto");
+        const titulo = document.getElementById("tituloProjeto");
+        if (!titulo) return;
+        const nome = campoNome?.value?.trim();
+        if (nome) {
+          titulo.textContent = nome;
+        } else {
+          titulo.textContent = "Nicolas Dufour - 1683";
+        }
+      }
+
+      function gerarLinhaScaling(listaNotas, notaRef, comprimentoRef) {
+        const idxRef = listaNotas.indexOf(notaRef);
+        if (idxRef === -1) return [];
+        return listaNotas.map((nota, i) => {
+          const delta = i - idxRef; // distância em semitons
+          const y = comprimentoRef * Math.pow(2, -delta / 12);
+          return {
+            x: i,
+            y
+          };
+        });
+      }
+
+      function gerarGraficoComprimentoLog() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        const pontosMedidos = [];
+        const listaNotas = getListaNotas();
+        const indiceC2Soante = getIndiceNotaSoante("c2");
+        let comprimentoRefC2Soante = null;
+        linhas.forEach((tr, i) => {
+          const comprimentoInput = tr.children[1].querySelector("input");
+          const comprimento = parseFloat(comprimentoInput ? comprimentoInput.value : "");
+          if (!isNaN(comprimento) && comprimento > 0) {
+            pontosMedidos.push({
+              x: i,
+              y: comprimento
+            });
+          }
+          if (i === indiceC2Soante && !isNaN(comprimento) && comprimento > 0) {
+            comprimentoRefC2Soante = comprimento;
+          }
+        });
+        if (pontosMedidos.length === 0) {
+          alert("Ainda não há comprimentos válidos para plotar.");
+          return;
+        }
+        if (indiceC2Soante === -1 || !comprimentoRefC2Soante) {
+          alert("Não foi possível localizar a tecla que soa como c2.");
+          return;
+        }
+
+        function gerarLinhaScalingPorIndice(indiceRef, comprimentoRef) {
+          if (indiceRef < 0 || indiceRef >= listaNotas.length) return [];
+          return listaNotas.map((nota, i) => {
+            const delta = i - indiceRef;
+            const y = comprimentoRef * Math.pow(2, -delta / 12);
+            return {
+              x: i,
+              y: y
+            };
+          });
+        }
+        const tipoEncordoamento = (document.getElementById("tipoEncordoamento")?.value || "").trim();
+        let ironC2, brassC2, redBrassC2;
+        if (tipoEncordoamento === "Mixed-strung Instrument") {
+          ironC2 = comprimentoRefC2Soante;
+          brassC2 = ironC2 * (193.2 / 231.8);
+          redBrassC2 = ironC2 * (154.6 / 231.8);
+        } else if (tipoEncordoamento === "Brass-strung Instrument") {
+          brassC2 = comprimentoRefC2Soante;
+          ironC2 = brassC2 * (231.8 / 193.2);
+          redBrassC2 = brassC2 * (154.6 / 193.2);
+        } else {
+          alert("Não foi possível determinar automaticamente o tipo de encordoamento a partir de c2.");
+          return;
+        }
+        const linhaIron = gerarLinhaScalingPorIndice(indiceC2Soante, ironC2);
+        const linhaBrass = gerarLinhaScalingPorIndice(indiceC2Soante, brassC2);
+        const linhaRedBrass = gerarLinhaScalingPorIndice(indiceC2Soante, redBrassC2);
+        const canvas = document.getElementById("graficoComprimentoLog");
+        const ctx = canvas.getContext("2d");
+        if (graficoComprimentoLog) {
+          graficoComprimentoLog.destroy();
+        }
+        graficoComprimentoLog = new Chart(ctx, {
+          type: "scatter",
+          data: {
+            datasets: [{
+              label: "Measured lengths",
+              data: pontosMedidos,
+              showLine: false,
+              borderColor: "purple",
+              backgroundColor: "purple",
+              borderWidth: 2,
+              pointRadius: 3,
+              tension: 0
+            }, {
+              label: "Iron scaling",
+              data: linhaIron,
+              showLine: true,
+              borderColor: "black",
+              borderWidth: 1,
+              pointRadius: 0,
+              borderDash: [6, 4]
+            }, {
+              label: "Brass scaling",
+              data: linhaBrass,
+              showLine: true,
+              borderColor: "goldenrod",
+              borderWidth: 2,
+              pointRadius: 0,
+              borderDash: [6, 4]
+            }, {
+              label: "Red brass scaling",
+              data: linhaRedBrass,
+              showLine: true,
+              borderColor: "red",
+              borderWidth: 1,
+              pointRadius: 0,
+              borderDash: [6, 4]
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            parsing: false,
+            scales: {
+              x: {
+                type: "linear",
+                min: 0,
+                max: listaNotas.length - 1,
+                ticks: {
+                  stepSize: 1,
+                  callback: function(value) {
+                    return listaNotas[value] ?? "";
+                  }
+                },
+                title: {
+                  display: true,
+                  text: "Notes"
+                }
+              },
+              y: {
+                type: "logarithmic",
+                title: {
+                  display: true,
+                  text: "String Length (mm)"
+                }
+              }
+            }
+          }
+        });
+      }
+
+      function cubicSpline(xs, ys, metodo = "natural") {
+        if (metodo === "notaknot") {
+          return cubicSplineNotAKnot(xs, ys);
+        }
+        return cubicSplineNatural(xs, ys);
+      }
+
+      function cubicSplineNatural(xs, ys) {
+        const n = xs.length;
+        const a = ys.slice();
+        const b = new Array(n).fill(0);
+        const d = new Array(n).fill(0);
+        const h = new Array(n - 1).fill(0);
+        for (let i = 0; i < n - 1; i++) {
+          h[i] = xs[i + 1] - xs[i];
+        }
+        const alpha = new Array(n).fill(0);
+        for (let i = 1; i < n - 1; i++) {
+          alpha[i] = (3 / h[i]) * (a[i + 1] - a[i]) - (3 / h[i - 1]) * (a[i] - a[i - 1]);
+        }
+        const c = new Array(n).fill(0);
+        const l = new Array(n).fill(0);
+        const mu = new Array(n).fill(0);
+        const z = new Array(n).fill(0);
+        l[0] = 1;
+        mu[0] = 0;
+        z[0] = 0;
+        for (let i = 1; i < n - 1; i++) {
+          l[i] = 2 * (xs[i + 1] - xs[i - 1]) - h[i - 1] * mu[i - 1];
+          mu[i] = h[i] / l[i];
+          z[i] = (alpha[i] - h[i - 1] * z[i - 1]) / l[i];
+        }
+        l[n - 1] = 1;
+        z[n - 1] = 0;
+        c[n - 1] = 0;
+        for (let j = n - 2; j >= 0; j--) {
+          c[j] = z[j] - mu[j] * c[j + 1];
+          b[j] = (a[j + 1] - a[j]) / h[j] - (h[j] * (c[j + 1] + 2 * c[j])) / 3;
+          d[j] = (c[j + 1] - c[j]) / (3 * h[j]);
+        }
+        return function(x) {
+          let i = n - 2;
+          for (let j = 0; j < n - 1; j++) {
+            if (x >= xs[j] && x <= xs[j + 1]) {
+              i = j;
+              break;
+            }
+          }
+          const dx = x - xs[i];
+          return a[i] + b[i] * dx + c[i] * dx * dx + d[i] * dx * dx * dx;
+        };
+      }
+
+      function cubicSplineNotAKnot(xs, ys) {
+        const n = xs.length;
+        if (n !== ys.length) {
+          throw new Error("xs e ys devem ter o mesmo tamanho.");
+        }
+        if (n < 4) {
+          throw new Error("A spline not-a-knot precisa de pelo menos 4 pontos.");
+        }
+        const h = new Array(n - 1);
+        for (let i = 0; i < n - 1; i++) {
+          h[i] = xs[i + 1] - xs[i];
+          if (h[i] <= 0) {
+            throw new Error("Os valores de xs devem ser estritamente crescentes.");
+          }
+        }
+        // Sistema A * M = rhs
+        // M[i] = segunda derivada em xs[i]
+        const A = Array.from({
+          length: n
+        }, () => new Array(n).fill(0));
+        const rhs = new Array(n).fill(0);
+        // Condição not-a-knot no início:
+        // (M1 - M0)/h0 = (M2 - M1)/h1
+        // => -h1*M0 + (h0+h1)*M1 - h0*M2 = 0
+        A[0][0] = -h[1];
+        A[0][1] = h[0] + h[1];
+        A[0][2] = -h[0];
+        rhs[0] = 0;
+        // Equações internas clássicas da spline cúbica
+        for (let i = 1; i < n - 1; i++) {
+          A[i][i - 1] = h[i - 1];
+          A[i][i] = 2 * (h[i - 1] + h[i]);
+          A[i][i + 1] = h[i];
+          rhs[i] = 6 * ((ys[i + 1] - ys[i]) / h[i] - (ys[i] - ys[i - 1]) / h[i - 1]);
+        }
+        // Condição not-a-knot no fim:
+        // (M[n-2] - M[n-3])/h[n-3] = (M[n-1] - M[n-2])/h[n-2]
+        // => -h[n-2]*M[n-3] + (h[n-3]+h[n-2])*M[n-2] - h[n-3]*M[n-1] = 0
+        A[n - 1][n - 3] = -h[n - 2];
+        A[n - 1][n - 2] = h[n - 3] + h[n - 2];
+        A[n - 1][n - 1] = -h[n - 3];
+        rhs[n - 1] = 0;
+        const M = solveLinearSystem(A, rhs);
+        // Coeficientes dos polinômios por intervalo
+        const a = ys.slice(0, n - 1);
+        const b = new Array(n - 1);
+        const c = new Array(n - 1);
+        const d = new Array(n - 1);
+        for (let i = 0; i < n - 1; i++) {
+          b[i] = (ys[i + 1] - ys[i]) / h[i] - (h[i] * (2 * M[i] + M[i + 1])) / 6;
+          c[i] = M[i] / 2;
+          d[i] = (M[i + 1] - M[i]) / (6 * h[i]);
+        }
+        return function(x) {
+          let i = n - 2;
+          if (x <= xs[0]) {
+            i = 0;
+          } else if (x >= xs[n - 1]) {
+            i = n - 2;
+          } else {
+            for (let j = 0; j < n - 1; j++) {
+              if (x >= xs[j] && x <= xs[j + 1]) {
+                i = j;
+                break;
+              }
+            }
+          }
+          const dx = x - xs[i];
+          return a[i] + b[i] * dx + c[i] * dx * dx + d[i] * dx * dx * dx;
+        };
+      }
+
+      function solveLinearSystem(A, b) {
+        const n = b.length;
+        // Cópias para não alterar os originais
+        const M = A.map(row => row.slice());
+        const rhs = b.slice();
+        // Eliminação de Gauss com pivoteamento parcial
+        for (let k = 0; k < n; k++) {
+          let maxRow = k;
+          let maxVal = Math.abs(M[k][k]);
+          for (let i = k + 1; i < n; i++) {
+            const val = Math.abs(M[i][k]);
+            if (val > maxVal) {
+              maxVal = val;
+              maxRow = i;
+            }
+          }
+          if (maxVal === 0) {
+            throw new Error("Sistema singular ao calcular a spline.");
+          }
+          if (maxRow !== k) {
+            [M[k], M[maxRow]] = [M[maxRow], M[k]];
+            [rhs[k], rhs[maxRow]] = [rhs[maxRow], rhs[k]];
+          }
+          for (let i = k + 1; i < n; i++) {
+            const factor = M[i][k] / M[k][k];
+            for (let j = k; j < n; j++) {
+              M[i][j] -= factor * M[k][j];
+            }
+            rhs[i] -= factor * rhs[k];
+          }
+        }
+        // Retrossubstituição
+        const x = new Array(n).fill(0);
+        for (let i = n - 1; i >= 0; i--) {
+          let sum = rhs[i];
+          for (let j = i + 1; j < n; j++) {
+            sum -= M[i][j] * x[j];
+          }
+          x[i] = sum / M[i][i];
+        }
+        return x;
+      }
+
+      function interpolarComprimentos() {
+        const linhas = document.querySelectorAll("#tabela tbody tr");
+        const xs = [];
+        const ys = [];
+        linhas.forEach((tr, i) => {
+          const input = tr.children[1]?.querySelector("input");
+          const val = parseFloat(input?.value);
+          if (!isNaN(val)) {
+            xs.push(i + 1);
+            ys.push(val);
+          }
+        });
+        const metodo = document.getElementById("metodoSpline").value;
+        if (metodo === "notaknot" && xs.length < 4) {
+          alert("Not-a-knot precisa de pelo menos 4 pontos.");
+          return;
+        }
+        if (xs.length < 3) {
+          alert("Você precisa de pelo menos 3 comprimentos preenchidos.");
+          return;
+        }
+        const spline = cubicSpline(xs, ys, metodo);
+        const xMin = xs[0];
+        const xMax = xs[xs.length - 1];
+        linhas.forEach((tr, i) => {
+          const input = tr.children[1]?.querySelector("input");
+          if (!input) return;
+          const x = i + 1;
+          const atual = parseFloat(input.value);
+          if (isNaN(atual) && x >= xMin && x <= xMax) {
+            input.value = Math.round(spline(x));
+            input.classList.add("vazio");
+          }
+        });
+        recalcularTudo();
+      }
+
+      function getListaNotas() {
+        return Array.from(document.querySelectorAll("#tabela tbody tr")).map(tr => tr.children[0].textContent.trim());
+      }
+
+      function getTransposicaoSemitons() {
+        const v = parseInt(document.getElementById("transposicaoSemitons")?.value || "0", 10);
+        return isNaN(v) ? 0 : v;
+      }
+      // Retorna o índice da linha escrita que SOA como a nota alvo
+      function getIndiceNotaSoante(notaAlvo) {
+        const notas = getListaNotas();
+        const idxAlvo = notas.indexOf(notaAlvo);
+        if (idxAlvo === -1) return -1;
+        const transp = getTransposicaoSemitons();
+        const idxEscrito = idxAlvo - transp;
+        // se transp = +7, a linha escrita 7 semitons abaixo é a que soa como a nota alvo
+        if (idxEscrito < 0 || idxEscrito >= notas.length) return -1;
+        return idxEscrito;
+      }
+
+      function getLinhaDaNotaSoante(notaAlvo) {
+        const idx = getIndiceNotaSoante(notaAlvo);
+        if (idx === -1) return null;
+        return document.querySelectorAll("#tabela tbody tr")[idx] || null;
+      }
+
+function descreverTransposicao(semitons) {
+  const intervalos = {
+    1: "Minor second",
+    2: "Major second",
+    3: "Minor third",
+    4: "Major third",
+    5: "Perfect fourth",
+    6: "Tritone",
+    7: "Perfect fifth",
+    8: "Minor sixth",
+    9: "Major sixth",
+    10: "Minor seventh",
+    11: "Major seventh",
+    12: "Octave",
+    13: "Minor ninth",
+    14: "Major ninth",
+    15: "Minor tenth",
+    16: "Major tenth",
+    17: "Perfect eleventh",
+    18: "Augmented eleventh", // opcional (ou pode deixar vazio)
+    19: "Perfect twelfth (tritave)",
+    20: "Minor thirteenth",
+    21: "Major thirteenth",
+    22: "Minor fourteenth",
+    23: "Major fourteenth",
+    24: "Double octave"
+  };
+
+  if (semitons === 0) return "";
+
+  const abs = Math.abs(semitons);
+  if (!intervalos[abs]) return "";
+
+  return semitons > 0
+    ? `${intervalos[abs]} above`
+    : `${intervalos[abs]} below`;
+}
+
+function atualizarDescricaoTransposicao() {
+  const input = document.getElementById("transposicaoSemitons");
+  const descricao = document.getElementById("descricaoTransposicao");
+  const valor = parseInt(input.value || "0", 10);
+
+  descricao.textContent = descreverTransposicao(valor);
+}
+
+      function recalcularTudo() {
+        atualizarTipoEncordoamento();
+        atualizarFrequenciasTabela();
+        atualizarFlScaleTabela();
+        ajustarSmallestWireAoFabricante();
+        calcularMaxWireF2();
+        calcularIntercept();
+        atualizarCalculatedDiameter();
+        atualizarMateriaisESafetyFactors();
+        atualizarFlWireC2();
+        atualizarMaxLengthC2();
+        atualizarRangeC2();
+      }
+      document.getElementById("wireMaker").addEventListener("change", recalcularTudo);
+      document.getElementById("pitchA1").addEventListener("input", aplicarPitch);
+      document.getElementById("refDiamC2").addEventListener("input", recalcularTudo);
+      document.getElementById("sfLimit").addEventListener("input", recalcularTudo);
+      document.getElementById("nomeProjeto").addEventListener("input", atualizarTituloProjeto);
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const inputTransposicao = document.getElementById("transposicaoSemitons");
+
+        document.getElementById("btnTransposicaoMenos").addEventListener("click", () => {
+          inputTransposicao.value = parseInt(inputTransposicao.value || 0) - 1;
+          atualizarDescricaoTransposicao();
+          recalcularTudo();
+        });
+
+        document.getElementById("btnTransposicaoMais").addEventListener("click", () => {
+          inputTransposicao.value = parseInt(inputTransposicao.value || 0) + 1;
+          atualizarDescricaoTransposicao();
+          recalcularTudo();
+        });
+      });
+
+      atualizarTituloProjeto();
+      configurarControleSmallestWire();
+      ajustarSmallestWireAoFabricante();
+      aplicarPitch();
+    </script>
+  </body>
+</html>
