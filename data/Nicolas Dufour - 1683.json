@@ -1,0 +1,269 @@
+{
+  "nomeProjeto": "Nicolas Dufour - 1683",
+  "comentariosProjeto": "",
+  "wireMaker": "malcolmRose",
+  "pitchA1": "415.3",
+  "transposicaoSemitons": "0",
+  "sfLimit": "-2",
+  "smallestWireF2": "0.230",
+  "smallestWireF2Indice": "2",
+  "refDiamC2": "",
+  "notas": {
+    "EE": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "FF": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "FF#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "GG": {
+      "comprimento": "1729.6",
+      "ajusteGauge": "0"
+    },
+    "GG#": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "AA": {
+      "comprimento": "1724.2",
+      "ajusteGauge": "0"
+    },
+    "BBb": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "BB": {
+      "comprimento": "1718.9",
+      "ajusteGauge": "0"
+    },
+    "C": {
+      "comprimento": "1712.2",
+      "ajusteGauge": "0"
+    },
+    "C#": {
+      "comprimento": "1703.4",
+      "ajusteGauge": "0"
+    },
+    "D": {
+      "comprimento": "1692.2",
+      "ajusteGauge": "0"
+    },
+    "Eb": {
+      "comprimento": "1677.9",
+      "ajusteGauge": "0"
+    },
+    "E": {
+      "comprimento": "1659.4",
+      "ajusteGauge": "0"
+    },
+    "F": {
+      "comprimento": "1635.3",
+      "ajusteGauge": "0"
+    },
+    "F#": {
+      "comprimento": "1603.9",
+      "ajusteGauge": "0"
+    },
+    "G": {
+      "comprimento": "1563.3",
+      "ajusteGauge": "0"
+    },
+    "Ab": {
+      "comprimento": "1513.7",
+      "ajusteGauge": "0"
+    },
+    "A": {
+      "comprimento": "1460.7",
+      "ajusteGauge": "0"
+    },
+    "Bb": {
+      "comprimento": "1406.9",
+      "ajusteGauge": "0"
+    },
+    "B": {
+      "comprimento": "1354.3",
+      "ajusteGauge": "0"
+    },
+    "c": {
+      "comprimento": "1300.5",
+      "ajusteGauge": "0"
+    },
+    "c#": {
+      "comprimento": "1248.6",
+      "ajusteGauge": "0"
+    },
+    "d": {
+      "comprimento": "1194.3",
+      "ajusteGauge": "0"
+    },
+    "eb": {
+      "comprimento": "1142.4",
+      "ajusteGauge": "0"
+    },
+    "e": {
+      "comprimento": "1090.9",
+      "ajusteGauge": "0"
+    },
+    "f": {
+      "comprimento": "1040.8",
+      "ajusteGauge": "0"
+    },
+    "f#": {
+      "comprimento": "991.1",
+      "ajusteGauge": "0"
+    },
+    "g": {
+      "comprimento": "943.5",
+      "ajusteGauge": "0"
+    },
+    "ab": {
+      "comprimento": "897.3",
+      "ajusteGauge": "0"
+    },
+    "a": {
+      "comprimento": "851.7",
+      "ajusteGauge": "0"
+    },
+    "bb": {
+      "comprimento": "807.7",
+      "ajusteGauge": "0"
+    },
+    "b": {
+      "comprimento": "765.1",
+      "ajusteGauge": "0"
+    },
+    "c1": {
+      "comprimento": "726.7",
+      "ajusteGauge": "0"
+    },
+    "c#1": {
+      "comprimento": "683.7",
+      "ajusteGauge": "0"
+    },
+    "d1": {
+      "comprimento": "644.6",
+      "ajusteGauge": "0"
+    },
+    "eb1": {
+      "comprimento": "607.5",
+      "ajusteGauge": "0"
+    },
+    "e1": {
+      "comprimento": "572.1",
+      "ajusteGauge": "0"
+    },
+    "f1": {
+      "comprimento": "538.3",
+      "ajusteGauge": "0"
+    },
+    "f#1": {
+      "comprimento": "507",
+      "ajusteGauge": "0"
+    },
+    "g1": {
+      "comprimento": "477.2",
+      "ajusteGauge": "0"
+    },
+    "ab1": {
+      "comprimento": "449.5",
+      "ajusteGauge": "0"
+    },
+    "a1": {
+      "comprimento": "423.3",
+      "ajusteGauge": "0"
+    },
+    "bb1": {
+      "comprimento": "398.6",
+      "ajusteGauge": "0"
+    },
+    "b1": {
+      "comprimento": "375.7",
+      "ajusteGauge": "0"
+    },
+    "c2": {
+      "comprimento": "354.4",
+      "ajusteGauge": "0"
+    },
+    "c#2": {
+      "comprimento": "335.1",
+      "ajusteGauge": "0"
+    },
+    "d2": {
+      "comprimento": "315.3",
+      "ajusteGauge": "0"
+    },
+    "eb2": {
+      "comprimento": "297.6",
+      "ajusteGauge": "0"
+    },
+    "e2": {
+      "comprimento": "281.1",
+      "ajusteGauge": "0"
+    },
+    "f2": {
+      "comprimento": "265.6",
+      "ajusteGauge": "0"
+    },
+    "f#2": {
+      "comprimento": "251.1",
+      "ajusteGauge": "0"
+    },
+    "g2": {
+      "comprimento": "237.5",
+      "ajusteGauge": "0"
+    },
+    "ab2": {
+      "comprimento": "224.7",
+      "ajusteGauge": "0"
+    },
+    "a2": {
+      "comprimento": "212.7",
+      "ajusteGauge": "0"
+    },
+    "bb2": {
+      "comprimento": "201.5",
+      "ajusteGauge": "0"
+    },
+    "b2": {
+      "comprimento": "190.8",
+      "ajusteGauge": "0"
+    },
+    "c3": {
+      "comprimento": "181.2",
+      "ajusteGauge": "0"
+    },
+    "c#3": {
+      "comprimento": "171.6",
+      "ajusteGauge": "0"
+    },
+    "d3": {
+      "comprimento": "162.7",
+      "ajusteGauge": "0"
+    },
+    "d#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "e3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "f3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "f#3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    },
+    "g3": {
+      "comprimento": "",
+      "ajusteGauge": "0"
+    }
+  }
+}
